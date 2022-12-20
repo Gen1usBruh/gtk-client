@@ -16,7 +16,7 @@
         <property name="orientation">vertical</property>
         <child>
           <!-- n-columns=2 n-rows=4 -->
-          <object class="GtkGrid">
+          <object class="GtkGrid" id="login_grid">
             <property name="width-request">100</property>
             <property name="height-request">80</property>
             <property name="visible">True</property>

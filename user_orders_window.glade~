@@ -69,6 +69,7 @@ Are you sure to cancel the booking?</property>
   <object class="GtkWindow" id="user_page_window">
     <property name="width-request">400</property>
     <property name="can-focus">False</property>
+    <signal name="destroy" handler="gtk_main_quit" swapped="no"/>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
@@ -91,6 +92,7 @@ Are you sure to cancel the booking?</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
                 <property name="halign">start</property>
+                <signal name="clicked" handler="main_window_auth_user" swapped="no"/>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -114,7 +116,7 @@ Are you sure to cancel the booking?</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="name_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="editable">False</property>
@@ -148,7 +150,7 @@ Are you sure to cancel the booking?</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="surname_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                   </object>
@@ -181,7 +183,7 @@ Are you sure to cancel the booking?</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="phone_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="editable">False</property>
@@ -215,7 +217,7 @@ Are you sure to cancel the booking?</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="email_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="editable">False</property>
@@ -249,7 +251,7 @@ Are you sure to cancel the booking?</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="country_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="editable">False</property>
@@ -283,7 +285,7 @@ Are you sure to cancel the booking?</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="zipcode_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="editable">False</property>
@@ -317,7 +319,7 @@ Are you sure to cancel the booking?</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="address_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="editable">False</property>
@@ -351,7 +353,7 @@ Are you sure to cancel the booking?</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEntry">
+                  <object class="GtkEntry" id="city_entry">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="editable">False</property>
@@ -393,12 +395,12 @@ Are you sure to cancel the booking?</property>
                     <property name="can-focus">False</property>
                     <property name="left-padding">12</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="booking1">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkBox" id="room_booked1">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
@@ -441,7 +443,7 @@ Are you sure to cancel the booking?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="date1">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">23.01.2021 - 24.04.2022</property>
@@ -452,7 +454,7 @@ Are you sure to cancel the booking?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="room_type1">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">King</property>
@@ -507,7 +509,7 @@ Are you sure to cancel the booking?</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkBox" id="room_booked2">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
@@ -565,7 +567,7 @@ Are you sure to cancel the booking?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="date2">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">11.07.2022 - 23.09.2022</property>
@@ -576,7 +578,7 @@ Are you sure to cancel the booking?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="room_type2">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Suite</property>
@@ -636,7 +638,7 @@ Are you sure to cancel the booking?</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="total1">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">$1500</property>
@@ -677,7 +679,7 @@ Are you sure to cancel the booking?</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="status1">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">success</property>
@@ -699,7 +701,7 @@ Are you sure to cancel the booking?</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="cancel1">
                             <property name="label" translatable="yes">Cancel booking</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
@@ -746,12 +748,12 @@ Are you sure to cancel the booking?</property>
                     <property name="can-focus">False</property>
                     <property name="left-padding">12</property>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="booking2">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkBox" id="room_booked3">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
@@ -794,7 +796,7 @@ Are you sure to cancel the booking?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="date3">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">23.01.2021 - 24.04.2022</property>
@@ -805,7 +807,7 @@ Are you sure to cancel the booking?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="room_type3">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">King</property>
@@ -860,7 +862,7 @@ Are you sure to cancel the booking?</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkBox" id="room_booked4">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
@@ -918,7 +920,7 @@ Are you sure to cancel the booking?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="room_booked_dates4">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">11.07.2022 - 23.09.2022</property>
@@ -929,7 +931,7 @@ Are you sure to cancel the booking?</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkLabel">
+                                  <object class="GtkLabel" id="room_type4">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="label" translatable="yes">Suite</property>
@@ -989,7 +991,7 @@ Are you sure to cancel the booking?</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="total2">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">$1500</property>
@@ -1030,7 +1032,7 @@ Are you sure to cancel the booking?</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel">
+                              <object class="GtkLabel" id="status2">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">success</property>
@@ -1052,7 +1054,7 @@ Are you sure to cancel the booking?</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="cancel2">
                             <property name="label" translatable="yes">Cancel booking</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>

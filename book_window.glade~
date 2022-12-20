@@ -241,7 +241,7 @@ on the calendars</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="room_grid1">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="row-spacing">5</property>
@@ -418,6 +418,7 @@ and a desk for accomplishing all your royal business.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="add_room_to_booking" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -436,7 +437,7 @@ and a desk for accomplishing all your royal business.</property>
                             </child>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="room_grid2">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="row-spacing">5</property>
@@ -615,6 +616,7 @@ and a desk for accomplishing all your royal business.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="add_room_to_booking" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -633,7 +635,7 @@ and a desk for accomplishing all your royal business.</property>
                             </child>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="room_grid3">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="row-spacing">5</property>
@@ -812,6 +814,7 @@ and a desk for accomplishing all your royal business.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="add_room_to_booking" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -830,7 +833,7 @@ and a desk for accomplishing all your royal business.</property>
                             </child>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="room_grid4">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="row-spacing">5</property>
@@ -1009,6 +1012,7 @@ and a desk for accomplishing all your royal business.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="add_room_to_booking" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -1027,7 +1031,7 @@ and a desk for accomplishing all your royal business.</property>
                             </child>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="room_grid5">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="row-spacing">5</property>
@@ -1206,6 +1210,7 @@ and a desk for accomplishing all your royal business.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="add_room_to_booking" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -1224,7 +1229,7 @@ and a desk for accomplishing all your royal business.</property>
                             </child>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="room_grid6">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="row-spacing">5</property>
@@ -1421,7 +1426,7 @@ and a desk for accomplishing all your royal business.</property>
                             </child>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="room_grid7">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="row-spacing">5</property>
@@ -1600,6 +1605,7 @@ and a desk for accomplishing all your royal business.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="add_room_to_booking" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -1618,7 +1624,7 @@ and a desk for accomplishing all your royal business.</property>
                             </child>
                             <child>
                               <!-- n-columns=3 n-rows=3 -->
-                              <object class="GtkGrid">
+                              <object class="GtkGrid" id="room_grid8">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="row-spacing">5</property>
@@ -1797,6 +1803,7 @@ and a desk for accomplishing all your royal business.</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
+                                    <signal name="clicked" handler="add_room_to_booking" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="left-attach">1</property>
@@ -1910,7 +1917,7 @@ Before 12:00 pm</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="room_basket_box1">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
@@ -2204,7 +2211,7 @@ Before 12:00 pm</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox">
+                      <object class="GtkBox" id="room_basket_box2">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="orientation">vertical</property>
@@ -2556,7 +2563,7 @@ Before 12:00 pm</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton">
+                      <object class="GtkButton" id="submit_booking_button">
                         <property name="label" translatable="yes">Contine booking</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
