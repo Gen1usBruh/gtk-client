@@ -337,21 +337,22 @@ remove_room(GtkWidget* widget, gpointer data);
 
 
 
+#include "http/http-api.h"
+
+struct http server;
 
 int main(int argc, char** argv)
 
 {
 
 	GtkBuilder *builder;
-
 	
+	http_init(&server, argv[1], atoi(argv[2]));
+	fprintf(stderr, "Server %s:%s SET", argv[1], argv[2]);
 
 	gtk_init(&argc, &argv);
 
-
-
 	if((builder = new_builder_from_file("home_glade.glade")) == NULL)
-
 		return 1;
 
 		
@@ -829,6 +830,9 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 	///Send POST request to authenticate user by email and password
 
 	//////////////////////////
+
+	// char *response
+	// http_get(&server, "/user/login", );
 
 	
 
