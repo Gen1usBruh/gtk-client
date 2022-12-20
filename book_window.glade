@@ -322,7 +322,7 @@ on the calendars</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
+                                        <property name="pixbuf">screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -518,7 +518,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
+                                        <property name="pixbuf">screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -716,7 +716,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
+                                        <property name="pixbuf">screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -914,7 +914,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
+                                        <property name="pixbuf">screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1112,7 +1112,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
+                                        <property name="pixbuf">screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1310,7 +1310,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
+                                        <property name="pixbuf">screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1507,7 +1507,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
+                                        <property name="pixbuf">screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1705,7 +1705,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
+                                        <property name="pixbuf">screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
