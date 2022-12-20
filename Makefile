@@ -12,12 +12,12 @@ LDFLAGS += $(shell pkg-config --libs json-c)
 CFLAGS += $(shell pkg-config --cflags gtk+-3.0)
 LDFLAGS += $(shell pkg-config --libs gtk+-3.0)
 
-CFLAGS += -I$(PROJ_DIR)
+CFLAGS += -I$(PROJ_DIR) -w
 
 HTTP_SRC += http/http-api.c \
 			http/socket_linux.c
 
-TARGET_CLIENT := client_app
+TARGET_CLIENT := gtk_main
 CLIENT_SRC := gtk_main.c
 # EXCLUDE HEADER FILES WITH NO C IMPLEMENTATION
 # CLIENT_HEADER_SRC := $(filter %.h,$(shell gcc -MM $(CLIENT_SRC) $(CLIENT_CFLAGS) ))
