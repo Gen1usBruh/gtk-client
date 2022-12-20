@@ -80,11 +80,11 @@ GtkWidget *submit_booking_button;
 
 
 
-GtkWidget *booking1, booking2;
+GtkWidget *booking1, *booking2;
 
-GtkWidget *transaction1, transaction2;
+GtkWidget *transaction1, *transaction2;
 
-GtkWidget *status1, status2;
+GtkWidget *status1, *status2;
 
 
 

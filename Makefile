@@ -10,7 +10,7 @@ LDFLAGS += $(shell pkg-config --libs json-c)
 
 
 CFLAGS += $(shell pkg-config --cflags gtk+-3.0)
-LDFLAGS += $(shell pkg-config --libs gtk+-3.0)
+LDFLAGS += $(shell pkg-config --libs gtk+-3.0) -rdynamic
 
 CFLAGS += -I$(PROJ_DIR) -w
 
