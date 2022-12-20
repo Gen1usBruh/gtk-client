@@ -322,7 +322,7 @@ on the calendars</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">../../shareWin/two-single_100x196.png</property>
+                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -517,7 +517,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">../../shareWin/two-single_100x196.png</property>
+                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -714,7 +714,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">../../shareWin/two-single_100x196.png</property>
+                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -911,7 +911,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">../../shareWin/two-single_100x196.png</property>
+                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1108,7 +1108,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">../../shareWin/two-single_100x196.png</property>
+                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1305,7 +1305,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">../../shareWin/two-single_100x196.png</property>
+                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1502,7 +1502,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">../../shareWin/two-single_100x196.png</property>
+                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -1699,7 +1699,7 @@ and a desk for accomplishing all your royal business.</property>
                                         <property name="height-request">80</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="pixbuf">../../shareWin/two-single_100x196.png</property>
+                                        <property name="pixbuf">./screens/images/two-single_100x196.png</property>
                                       </object>
                                       <packing>
                                         <property name="left-attach">0</property>
@@ -2168,12 +2168,12 @@ Before 12:00 pm</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="remove_room_1">
+                                  <object class="GtkButton" id="remove_room">
                                     <property name="label" translatable="yes">Remove</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
-                                    <signal name="clicked" handler="remove_room_1" swapped="no"/>
+                                    <signal name="clicked" handler="remove_room" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -2462,12 +2462,12 @@ Before 12:00 pm</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkButton" id="remove_room_2">
+                                  <object class="GtkButton" id="remove_room">
                                     <property name="label" translatable="yes">Remove</property>
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
-                                    <signal name="clicked" handler="remove_room_2" swapped="no"/>
+                                    <signal name="clicked" handler="remove_room" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
