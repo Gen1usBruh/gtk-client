@@ -343,14 +343,18 @@ remove_room(GtkWidget* widget, gpointer data);
 
 
 
+#include "http/http-api.h"
+
+struct http server;
 
 int main(int argc, char** argv)
 
 {
 
 	GtkBuilder *builder;
-
 	
+	http_init(&server, argv[1], atoi(argv[2]));
+		
 
 	gtk_init(&argc, &argv);
 
@@ -755,7 +759,8 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 	///Send GET request to authenticate user by email and password
 
 	//////////////////////////
-
+	char *response
+	http_get(&server, "/user/login", )
 	
 
 	if(1)
@@ -866,11 +871,11 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 
 	{
 
-		strcpy(user_name, name);
+		// strcpy(user_name, name);
 
-		strcpy(user_email, email);
+		// strcpy(user_email, email);
 
-		strcpy(user_password, password);
+		// strcpy(user_password, password);
 
 		
 
