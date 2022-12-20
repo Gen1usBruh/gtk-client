@@ -178,7 +178,6 @@ int main(int argc, char** argv)
 		return 1;
 		
 	fprintf(stderr, "FAT COCK");
-
 	main_window = GTK_WIDGET(gtk_builder_get_object(builder, "main_window"));
 	open_window = main_window;
   	
@@ -376,7 +375,6 @@ user_orders_func(GtkWidget* widget, gpointer data)
 		
 	}
 
-	
 	gtk_builder_connect_signals(builder, NULL);
 	gtk_widget_hide(open_window);
 	gtk_widget_show(user_orders_window);
@@ -399,7 +397,6 @@ login_user_func(void)
 	user_login_window = GTK_WIDGET(gtk_builder_get_object(builder, "login_user_window"));
 	label_login_error = GTK_WIDGET(gtk_builder_get_object(builder, "login_error_label"));
 	login_grid = GTK_WIDGET(gtk_builder_get_object(builder, "login_grid"));
-	
 	
 	gtk_builder_connect_signals(builder, NULL);
 	gtk_widget_hide(main_window);
@@ -426,7 +423,7 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 	
 	if(1)
 	{
-		
+	
 		user_is_authenticated = 1;
 		main_window_auth_user();
 	}
