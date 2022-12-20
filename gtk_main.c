@@ -20,14 +20,6 @@ char* conc_str_int(const char *str, int num, char *buff)
 
 
 
-int daysBetweenDates(struct date date1, struct date date2);
-
-int getDays(int year, int month, int day);
-
-int isLeap(int num);
-
-
-
 const char* map_num_to_month[12] = {
 
 	"January", "February", "March", "April",
@@ -83,6 +75,10 @@ GtkWidget *label_date_to_search;
 GtkWidget *total_cost;
 
 GtkWidget *submit_booking_button;
+
+
+
+//////////////////
 
 
 
@@ -158,15 +154,7 @@ struct room_listbox rooms_display[8];
 
 
 
-GtkWidget *parent_rooms_listbox;
-
-
-
-const int rooms_count_response;
-
-
-
-struct{
+struct date{
 
 	int year;
 
@@ -174,29 +162,43 @@ struct{
 
 	int day;
 
-} date;
-
-
+};
 
 struct date cal_date_from = {0, 0, 0}, cal_date_to = {0, 0 , 0}, 
 
-aux_cal_date_from = {0, 0, 0}, aux_cal_date_from = {0, 0 , 0};
+aux_cal_date_from = {0, 0, 0}, aux_cal_date_to = {0, 0 , 0};
 
 
+
+const int rooms_count_response;
 
 int rooms_count_track; 
 
-double room_cost_total[2];
+double room_cost_total;
 
 double taxes = 37.5;
 
 
 
-int user_is_authenticated = 0;
+///////////////////////
+
+
+
+int user_is_authenticated = 1;
 
 char *user_name = NULL;
 
+
+
 ///////////////////////
+
+
+
+int getDays(int year, int month, int day);
+
+int isLeap(int num);
+
+int daysBetweenDates(struct date date1, struct date date2);
 
 
 
@@ -212,11 +214,11 @@ auth_user_and_redirect(GtkWidget* widget, gpointer data);
 
 
 
+void
+
 main_window_auth_user(void);
 
 
-
-///////
 
 void
 
@@ -227,8 +229,6 @@ book_room_func(void);
 void
 
 login_user_func(void);
-
-///////
 
 
 
@@ -330,7 +330,7 @@ int main(int argc, char** argv)
 
 
 
-  	main_window_auth_user(void);
+  	main_window_auth_user();
 
   	
 
@@ -366,7 +366,7 @@ int main(int argc, char** argv)
 
 
 
-GtkBuilder *builder
+GtkBuilder *
 
 new_builder_from_file(const char *filename)
 
@@ -412,7 +412,7 @@ auth_user_and_redirect(GtkWidget* widget, gpointer data)
 
 
 
-G_MODULE_EXPORT void
+void
 
 main_window_auth_user(void)
 
@@ -458,13 +458,15 @@ book_room_func(void)
 
 	
 
-	label_date_from_search = GTK_WIDGET(gtk_builder_get_object(builder, "label_date_from_search"));
+	calendar_from = GTK_WIDGET(gtk_builder_get_object(builder, "calendar_from"));
 
-	label_date_to_search = GTK_WIDGET(gtk_builder_get_object(builder, "label_date_to_search"));
+	calendar_to = GTK_WIDGET(gtk_builder_get_object(builder, "calendar_to"));
 
 	
 
-	//parent_rooms_listbox = GTK_WIDGET(gtk_builder_get_object(builder, "parent_listbox"));
+	label_date_from_search = GTK_WIDGET(gtk_builder_get_object(builder, "label_date_from_search"));
+
+	label_date_to_search = GTK_WIDGET(gtk_builder_get_object(builder, "label_date_to_search"));
 
 	
 
@@ -472,23 +474,23 @@ book_room_func(void)
 
 	{
 
-		temp_buf[32];
+		char buf[32];
 
-		rooms_display[i-1]->grid_parent = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_grid", i, buf)));
+		rooms_display[i-1].grid_parent = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_grid", i, buf)));
 
-		rooms_display[i-1]->image = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("image_room", i, buf)));
+		rooms_display[i-1].image = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("image_room", i, buf)));
 
-		rooms_display[i-1]->book_button = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("add_room_button", i, buf)));
+		rooms_display[i-1].book_button = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("add_room_button", i, buf)));
 
-		rooms_display[i-1]->room_type = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_type_label", i, buf)));
+		rooms_display[i-1].room_type = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_type_label", i, buf)));
 
-		rooms_display[i-1]->details = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("textview_details", i, buf)));
+		rooms_display[i-1].details = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("textview_details", i, buf)));
 
-		rooms_display[i-1]->description = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("short_description_label", i, buf)));
+		rooms_display[i-1].description = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("short_description_label", i, buf)));
 
-		rooms_display[i-1]->price = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("price_label", i, buf)));
+		rooms_display[i-1].price = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("price_label", i, buf)));
 
-		gtk_widget_hide(rooms_display[i-1]->grid_parent);
+		gtk_widget_hide(rooms_display[i-1].grid_parent);
 
 	}
 
@@ -498,23 +500,23 @@ book_room_func(void)
 
 	{
 
-		temp_buf[32];
+		char buf[32];
 
-		booking_basket[i-1]->box_parent = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_basket_box", i, buf)));
+		booking_basket[i-1].box_parent = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_basket_box", i, buf)));
 
-		booking_basket[i-1]->label_date_from = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("label_date_from_booking", i, buf)));
+		booking_basket[i-1].label_date_from = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("label_date_from_booking", i, buf)));
 
-		booking_basket[i-1]->label_date_to = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("label_date_to_booking", i, buf)));
+		booking_basket[i-1].label_date_to = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("label_date_to_booking", i, buf)));
 
-		booking_basket[i-1]->room_cost = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_cost", i, buf)));
+		booking_basket[i-1].room_cost = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_cost", i, buf)));
 
-		booking_basket[i-1]->nights = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("nights_count", i, buf)));
+		booking_basket[i-1].nights = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("nights_count", i, buf)));
 
-		booking_basket[i-1]->taxes = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("taxes", i, buf)));
+		booking_basket[i-1].taxes = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("taxes", i, buf)));
 
-		booking_basket[i-1]->remove_button = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("remove_room", i, buf)));
+		booking_basket[i-1].remove_button = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("remove_room", i, buf)));
 
-		gtk_widget_hide(booking_basket[i-1]->box_parent);
+		gtk_widget_hide(booking_basket[i-1].box_parent);
 
 	}
 
@@ -532,17 +534,11 @@ book_room_func(void)
 
 	////////////////////// HOW TO SET DATE AT THE BEGINNING??? ///////////
 
-	//get_calendar_from_date(calendar_from, &cal_date_from);
+	get_calendar_from_date(calendar_from, &cal_date_from);
 
-	//get_calendar_to_date(calendar_to, &cal_date_to);
-
-	//set_date_labels_search();
+	get_calendar_to_date(calendar_to, &cal_date_to);
 
 	/////////////////////
-
-	
-
-	
 
 	
 
@@ -568,7 +564,7 @@ set_date_from_label_search(void)
 
 	char date_from_buff[16];
 
-	sprintf(date_from_buff, "%02d.%02d.%d", cal_date_from.day, cal_date_from.month, 																	cal_date_from.year);
+	sprintf(date_from_buff, "%02d.%02d.%d", cal_date_from.day, cal_date_from.month + 1, 																	cal_date_from.year);
 
 	gtk_label_set_text(label_date_from_search, date_from_buff);
 
@@ -584,7 +580,7 @@ set_date_to_label_search(void)
 
 	char date_to_buff[16];
 
-	sprintf(date_to_buff, "%02d.%02d.%d", cal_date_to.day, cal_date_to.month, 																	cal_date_to.year);
+	sprintf(date_to_buff, "%02d.%02d.%d", cal_date_to.day, cal_date_to.month + 1, 																	cal_date_to.year);
 
 	gtk_label_set_text(label_date_to_search, date_to_buff);
 
@@ -600,7 +596,7 @@ get_calendar_from_date(GtkWidget* widget, gpointer data)
 
 {
 
-	gtk_calendar_get_date(calendar_from, &cal_date_from.year, &cal_date_from.month + 1, 																&cal_date_from.day);
+	gtk_calendar_get_date(calendar_from, &cal_date_from.year, &cal_date_from.month, 																&cal_date_from.day);
 
 	set_date_from_label_search();
 
@@ -614,7 +610,7 @@ get_calendar_to_date(GtkWidget* widget, gpointer data)
 
 {
 
-	gtk_calendar_get_date(calendar_to, &cal_date_to.year, &cal_date_to.month + 1, 																	&cal_date_to.day);
+	gtk_calendar_get_date(calendar_to, &cal_date_to.year, &cal_date_to.month, 																	&cal_date_to.day);
 
 	set_date_to_label_search();
 
@@ -624,7 +620,7 @@ get_calendar_to_date(GtkWidget* widget, gpointer data)
 
 G_MODULE_EXPORT void
 
-user_orders_func(void)
+user_orders_func(GtkWidget* widget, gpointer data)
 
 {
 
@@ -652,7 +648,7 @@ user_orders_func(void)
 
 G_MODULE_EXPORT void
 
-logout_func(void)
+logout_func(GtkWidget* widget, gpointer data)
 
 {
 
@@ -678,7 +674,7 @@ login_user_func(void)
 
 	label_login_error = GTK_WIDGET(gtk_builder_get_object(builder, "login_error_label"));
 
-	login_grid =  = GTK_WIDGET(gtk_builder_get_object(builder, "login_grid"));
+	login_grid = GTK_WIDGET(gtk_builder_get_object(builder, "login_grid"));
 
 	
 
@@ -708,7 +704,9 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 
 	//////////////////////////
 
-	if()
+	
+
+	if(1)
 
 	{
 
@@ -736,6 +734,40 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 
 	}
 
+	
+
+}
+
+
+
+G_MODULE_EXPORT void
+
+signup_page_func(GtkWidget* widget, gpointer data)
+
+{
+
+	GtkBuilder *builder = new_builder_from_file("signup_window.glade");
+
+	
+
+	user_signup_window = GTK_WIDGET(gtk_builder_get_object(builder, "signup_user_window"));
+
+	label_signup_error = GTK_WIDGET(gtk_builder_get_object(builder, "signup_error_label"));
+
+	signup_grid = GTK_WIDGET(gtk_builder_get_object(builder, "signup_grid"));
+
+	
+
+	gtk_builder_connect_signals(builder, NULL);
+
+	gtk_widget_hide(open_window);
+
+	gtk_widget_show(user_signup_window);
+
+	open_window = user_signup_window;
+
+	g_object_unref(builder);
+
 }
 
 
@@ -752,7 +784,9 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 
 	//////////////////////////
 
-	if()
+	
+
+	if(1)
 
 	{
 
@@ -780,37 +814,7 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 
 	}
 
-}
-
-
-
-G_MODULE_EXPORT void
-
-signup_page_func(GtkWidget* widget, gpointer data)
-
-{
-
-	GtkBuilder *builder = new_builder_from_file("signup_window.glade");
-
 	
-
-	user_signup_window = GTK_WIDGET(gtk_builder_get_object(builder, "signup_user_window"));
-
-	label_signup_error = GTK_WIDGET(gtk_builder_get_object(builder, "signup_error_label"));
-
-	signup_grid =  = GTK_WIDGET(gtk_builder_get_object(builder, "signup_grid"));
-
-	
-
-	gtk_builder_connect_signals(builder, NULL);
-
-	gtk_widget_hide(open_window);
-
-	gtk_widget_show(user_signup_window);
-
-	open_window = user_signup_window;
-
-	g_object_unref(builder);
 
 }
 
@@ -848,7 +852,7 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 
 	
 
-	if(){
+	if(1){
 
 		
 
@@ -878,7 +882,7 @@ add_room_to_booking(GtkWidget* widget, gpointer data)
 
 	{
 
-		if(widget == rooms_display[i]->book_button)
+		if(widget == rooms_display[i].book_button)
 
 		{
 
@@ -902,13 +906,13 @@ add_room_to_booking(GtkWidget* widget, gpointer data)
 
 	sprintf(buf, "%s %d, %d", map_num_to_month[aux_cal_date_from.month], aux_cal_date_from.day, aux_cal_date_from.year);
 
-	gtk_label_set_text(booking_basket[index]->label_date_from, buf);
+	gtk_label_set_text(booking_basket[index].label_date_from, buf);
 
 	
 
 	sprintf(buf, "%s %d, %d", map_num_to_month[aux_cal_date_to.month], aux_cal_date_to.day, aux_cal_date_to.year);
 
-	gtk_label_set_text(booking_basket[index]->label_date_to, buf);
+	gtk_label_set_text(booking_basket[index].label_date_to, buf);
 
 	
 
@@ -916,21 +920,21 @@ add_room_to_booking(GtkWidget* widget, gpointer data)
 
 	sprintf(buf, "%d", nights_count);
 
-	gtk_label_set_text(booking_basket[index]->nights, buf);
+	gtk_label_set_text(booking_basket[index].nights, buf);
 
 	
 
-	double room_cost_all_nights = nights_count*atof(gtk_label_get_text(rooms_display[i]->price));
+	double room_cost_all_nights = nights_count*atof(gtk_label_get_text(rooms_display[i].price));
 
 	sprintf(buf, "%f", room_cost_all_nights);
 
-	gtk_label_set_text(booking_basket[index]->room_cost, buf);
+	gtk_label_set_text(booking_basket[index].room_cost, buf);
 
 	
 
 	sprintf(buf, "%f", taxes*nights_count);
 
-	gtk_label_set_text(booking_basket[index]->taxes, buf);
+	gtk_label_set_text(booking_basket[index].taxes, buf);
 
 	
 
@@ -938,9 +942,9 @@ add_room_to_booking(GtkWidget* widget, gpointer data)
 
 	rooms_cost_data[index].room_total_cost = room_cost_total;
 
-	rooms_cost_data[index]->parent = booking_basket[index]->box_parent;
+	rooms_cost_data[index].parent = booking_basket[index].box_parent;
 
-	double total_cost_temp = atof(gtk_label_get_text(total_cost));
+	double total_cost_temp = atof(gtk_label_get_text(total_cost));;
 
 	sprintf(buf, "%f", total_cost_temp + room_cost_total);
 
@@ -948,7 +952,7 @@ add_room_to_booking(GtkWidget* widget, gpointer data)
 
 	
 
-	gtk_widget_show(booking_basket[index]->box_parent);
+	gtk_widget_show(booking_basket[index].box_parent);
 
 	
 
@@ -958,7 +962,7 @@ add_room_to_booking(GtkWidget* widget, gpointer data)
 
 		for(i = 0; i < rooms_count_response; ++i)
 
-			gtk_widget_hide(rooms_display[i]->book_button);
+			gtk_widget_hide(rooms_display[i].book_button);
 
 	}
 
@@ -1012,11 +1016,11 @@ remove_room(GtkWidget* widget, gpointer data)
 
 		double temp_total_cost = atof(gtk_label_get_text(total_cost));
 
-		if(rooms_cost_data[0]->parent == widget)
+		if(rooms_cost_data[0].parent == widget)
 
 			temp_total_cost -= rooms_cost_data[0].room_total_cost;
 
-		else if(rooms_cost_data[1]->parent == widget)
+		else if(rooms_cost_data[1].parent == widget)
 
 			temp_total_cost -= rooms_cost_data[1].room_total_cost;
 
@@ -1032,9 +1036,9 @@ remove_room(GtkWidget* widget, gpointer data)
 
 		
 
-		for(i = 0; i < rooms_count_response; ++i)
+		for(int i = 0; i < rooms_count_response; ++i)
 
-			gtk_widget_show(rooms_display[i]->book_button);
+			gtk_widget_show(rooms_display[i].book_button);
 
 	}
 
@@ -1124,7 +1128,7 @@ int getDays(int year, int month, int day)
 
     
 
-bool isLeap(int num) 
+int isLeap(int num) 
 
 {
 
