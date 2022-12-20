@@ -80,11 +80,11 @@ GtkWidget *submit_booking_button;
 
 
 
-GtkWidget *bookings[2];
+GtkWidget *booking1, booking2;
 
-GtkWidget *transactions[2];
+GtkWidget *transaction1, transaction2;
 
-GtkWidget *statuses[2];
+GtkWidget *status1, status2;
 
 
 
@@ -220,19 +220,13 @@ char user_surname[64];
 
 char user_country[32];
 
+char user_phone[16];
+
 char user_city[32];
 
 char user_address[64];
 
 char user_zipcode[32];
-
-
-
-///////////////////////
-
-
-
-GtkWidget *name_entry;
 
 
 
@@ -360,6 +354,10 @@ int main(int argc, char** argv)
 
 	if((builder = new_builder_from_file("home_glade.glade")) == NULL)
 		return 1;
+
+		
+
+	fprintf(stderr, "FAT COCK");
 
 
 
@@ -681,7 +679,81 @@ user_orders_func(GtkWidget* widget, gpointer data)
 
 	
 
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "name_entry")), user_name);
+
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "surname_entry")), user_surname);
+
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "email_entry")), user_email);
+
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "password_entry")), user_password);
+
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "phone_entry")), user_phone);
+
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "country_entry")), user_country);
+
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "city_entry")), user_city);
+
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "zipcode_entry")), user_zipcode);
+
 	
+
+	booking1 = GTK_WIDGET(gtk_builder_get_object(builder, "booking1"));
+
+	booking2 = GTK_WIDGET(gtk_builder_get_object(builder, "booking2"));
+
+	transaction1 = GTK_WIDGET(gtk_builder_get_object(builder, "total1"));
+
+	transaction2 = GTK_WIDGET(gtk_builder_get_object(builder, "total2"));
+
+	status1 = GTK_WIDGET(gtk_builder_get_object(builder, "status1"));
+
+	status2 = GTK_WIDGET(gtk_builder_get_object(builder, "status2"));		
+
+	
+
+	
+
+	
+
+	for(int i = 1; i <= 4; ++i)
+
+	{
+
+		char buf[64];
+
+		orders_user[i-1].room_type = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_type", i, buf)));
+
+		orders_user[i-1].label_date = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("date", i, buf)));
+
+	}
+
+	
+
+	///////////////////
+
+	///GET bookings of user
+
+	///////////////////
+
+	
+
+	if(1)
+
+	{
+
+		
+
+	}
+
+	else
+
+	{
+
+		
+
+	}
+
+
 
 	
 
@@ -731,6 +803,8 @@ login_user_func(void)
 
 	
 
+	
+
 	gtk_builder_connect_signals(builder, NULL);
 
 	gtk_widget_hide(main_window);
@@ -753,7 +827,7 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 
 	//////////////////////////
 
-	///Send GET request to authenticate user by email and password
+	///Send POST request to authenticate user by email and password
 
 	//////////////////////////
 
@@ -762,15 +836,29 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 
 	
 
+	GtkBuilder *builder = new_builder_from_file("login_window.glade");
+
+	char buf1[64];
+
+	char buf2[64];
+
+	strncpy(buf1, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "email_entry"))), 63);
+
+	strncpy(buf2, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "password_entry"))), 63);
+
+			
+
+	
+
+	
+
+	
+
 	if(1)
 
 	{
 
-		////////////
-
-		//store all user information in global variables
-
-		////////////
+		
 
 		user_is_authenticated = 1;
 
@@ -790,7 +878,9 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 
 	}
 
-	
+
+
+	g_object_unref(builder);
 
 }
 
@@ -858,25 +948,9 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 
 	
 
-	//////////////////////////
-
-	///Send POST request to register a new user record
-
-	//////////////////////////
-
-	
-
 	if(1)
 
-	{
-
-		// strcpy(user_name, name);
-
-		// strcpy(user_email, email);
-
-		// strcpy(user_password, password);
-
-		
+	{	
 
 		user_is_authenticated = 1;
 
