@@ -4,6 +4,8 @@
 
 #include <math.h>
 
+#include <string.h>
+
 
 
 char* conc_str_int(const char *str, int num, char *buff)
@@ -75,6 +77,28 @@ GtkWidget *label_date_to_search;
 GtkWidget *total_cost;
 
 GtkWidget *submit_booking_button;
+
+
+
+GtkWidget *bookings[2];
+
+GtkWidget *transactions[2];
+
+GtkWidget *statuses[2];
+
+
+
+struct order_rooms_frame{
+
+	GtkWidget *room_type;
+
+	GtkWidget *label_date;
+
+};
+
+struct order_rooms_frame orders_user[4];
+
+
 
 
 
@@ -184,9 +208,31 @@ double taxes = 37.5;
 
 
 
-int user_is_authenticated = 1;
+int user_is_authenticated = 0;
 
-char *user_name = NULL;
+char user_name[64];
+
+char user_email[64];
+
+char user_password[64];
+
+char user_surname[64];
+
+char user_country[32];
+
+char user_city[32];
+
+char user_address[64];
+
+char user_zipcode[32];
+
+
+
+///////////////////////
+
+
+
+GtkWidget *name_entry;
 
 
 
@@ -490,6 +536,8 @@ book_room_func(void)
 
 		rooms_display[i-1].price = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("price_label", i, buf)));
 
+		//printf("PRICE for ROOM %s: %f", i-1, gtk_label_get_text(rooms_display[i-1]->price));
+
 		gtk_widget_hide(rooms_display[i-1].grid_parent);
 
 	}
@@ -629,6 +677,10 @@ user_orders_func(GtkWidget* widget, gpointer data)
 	
 
 	user_orders_window = GTK_WIDGET(gtk_builder_get_object(builder, "user_page_window"));
+
+	
+
+	
 
 	
 
@@ -778,6 +830,30 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 
 {
 
+
+
+	GtkBuilder *builder = new_builder_from_file("signup_window.glade");
+
+
+
+	strncpy(user_name, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "name_entry"))), 63);
+
+	strncpy(user_surname, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "surname_entry"))), 63);
+
+	strncpy(user_email, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "email_entry"))), 63);
+
+	strncpy(user_password, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "password_entry"))), 63);
+
+	strncpy(user_country, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "country_entry"))), 31);
+
+	strncpy(user_city, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "city_entry"))), 31);
+
+	strncpy(user_address, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "address_entry"))), 63);
+
+	strncpy(user_zipcode, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "zipcode_entry"))), 31);
+
+	
+
 	//////////////////////////
 
 	///Send POST request to register a new user record
@@ -790,11 +866,13 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 
 	{
 
-		////////////
+		strcpy(user_name, name);
 
-		//store all user information in global variables
+		strcpy(user_email, email);
 
-		////////////
+		strcpy(user_password, password);
+
+		
 
 		user_is_authenticated = 1;
 
@@ -815,6 +893,8 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 	}
 
 	
+
+	g_object_unref(builder);
 
 }
 
