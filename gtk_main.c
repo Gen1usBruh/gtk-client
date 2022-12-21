@@ -108,6 +108,12 @@ double taxes = 37.5;
 
 ///////////////////////
 
+const char *admin_name = "admin";
+const char *admin_email = "admin@admin";
+const char *admin_password = "admin";
+
+///////////////////////
+
 int user_is_authenticated = 0;
 char user_name[64];
 char user_email[64];
@@ -140,8 +146,11 @@ book_room_func(void);
 void
 login_user_func(void);
 
+void
+user_orders_func(void);
+
 G_MODULE_EXPORT void
-user_orders_func(GtkWidget* widget, gpointer data);
+user_check_redirect(GtkWidget* widget, gpointer data);
 
 G_MODULE_EXPORT void
 logout_func(GtkWidget* widget, gpointer data);
@@ -240,9 +249,11 @@ main_window_auth_user(void)
   		gtk_widget_show(button_user_page);
   		gtk_widget_show(button_logout);
   	}
+	gtk_button_set_label(button_user_page, "Log in");
   	gtk_widget_hide(button_user_page);
   	gtk_widget_hide(button_logout);
   	
+	// smells fishy. Check later!!!
   	if(open_builder != NULL){
 		g_object_unref(open_builder);  	
   	}
@@ -340,7 +351,16 @@ get_calendar_to_date(GtkWidget* widget, gpointer data)
 }
 
 G_MODULE_EXPORT void
-user_orders_func(GtkWidget* widget, gpointer data)
+user_check_redirect(GtkWidget* widget, gpointer data)
+{
+	if(user_is_authenticated)
+		user_orders_func();
+	else
+		login_user_func();
+}
+
+void
+user_orders_func(void)
 {
 	GtkBuilder *builder = new_builder_from_file("user_orders_window.glade");
 	
@@ -421,6 +441,15 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 	
 	gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "entrybuffer1"), 0, -1);
 	gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "entrybuffer2"), 0, -1);
+
+	// Validate for admin credentials
+	if(strcmp(admin_email, user_email) == 0 && strcmp(admin_password, user_password) == 0)
+	{
+		
+	}
+
+
+	
 		
 	/*		
 	printf("\n|%s|\n", user_email);
@@ -431,17 +460,18 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 	///Send POST request to authenticate user by email and password
 	//////////////////////////
 	
-	if(ret_code == 200)
+	if(0)//(ret_code == 200)
 	{
 		user_is_authenticated = 1;
 		
 		//Make GET requests until succeeds
-		while(ret_code != 200)
+		while(1)//(ret_code != 200)
 		{			
 			///////////////////////
 			///Send GET /userByEmailAndPassword
 			///////////////////////
 			
+			/*
 			strncpy(user_name, json_name, 63);
 			strncpy(user_surname, json_surname, 63);
 			strncpy(user_email, json_email, 63);
@@ -451,6 +481,7 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 			strncpy(user_city, json_city, 31);
 			strncpy(user_address, json_address, 63);
 			strncpy(user_zipcode, json_zipcode, 31);	
+			*/
 		
 			main_window_auth_user();	
 		}
@@ -497,8 +528,9 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 	//////////////////////////
 	///Send POST /addUser to create new user
 	//////////////////////////
-
-	if(ret_code == 200)
+	
+	
+	if(1)//(ret_code == 200)
 	{	
 		user_is_authenticated = 1;
 		main_window_auth_user();
@@ -520,6 +552,7 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "zipcode_buffer"), 0, -1);
 		*/
 	}
+	
 }
 
 G_MODULE_EXPORT void
