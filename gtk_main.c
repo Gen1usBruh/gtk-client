@@ -538,8 +538,8 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 	
 	//rooms_count_response -> how many rooms were actually retreived
 	
-	if(1){
-		
+	if(ret_code == 200){
+		json_object * jobj = json_tokener_parse(string);
 	}
 	else
 	{
