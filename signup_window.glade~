@@ -2,7 +2,35 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkEntryBuffer" id="address_buffer">
+    <property name="max-length">63</property>
+  </object>
+  <object class="GtkEntryBuffer" id="city_buffer">
+    <property name="max-length">31</property>
+  </object>
+  <object class="GtkEntryBuffer" id="country_buffer">
+    <property name="max-length">31</property>
+  </object>
+  <object class="GtkEntryBuffer" id="email_buffer">
+    <property name="max-length">63</property>
+  </object>
+  <object class="GtkEntryBuffer" id="name_buffer">
+    <property name="max-length">63</property>
+  </object>
+  <object class="GtkEntryBuffer" id="password_buffer">
+    <property name="max-length">63</property>
+  </object>
+  <object class="GtkEntryBuffer" id="phone_buffer">
+    <property name="max-length">15</property>
+  </object>
+  <object class="GtkEntryBuffer" id="surname_buffer">
+    <property name="max-length">63</property>
+  </object>
+  <object class="GtkEntryBuffer" id="zipcode_buffer">
+    <property name="max-length">31</property>
+  </object>
   <object class="GtkWindow" id="signup_user_window">
+    <property name="width-request">500</property>
     <property name="can-focus">False</property>
     <child>
       <object class="GtkBox">
@@ -10,7 +38,34 @@
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <!-- n-columns=2 n-rows=16 -->
+          <!-- n-columns=1 n-rows=1 -->
+          <object class="GtkGrid">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="halign">center</property>
+            <child>
+              <object class="GtkButton">
+                <property name="label" translatable="yes">Back to Menu</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="main_window_auth_user" swapped="no"/>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="padding">5</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <!-- n-columns=2 n-rows=18 -->
           <object class="GtkGrid" id="signup_grid">
             <property name="width-request">100</property>
             <property name="height-request">80</property>
@@ -25,6 +80,7 @@
                 <property name="can-focus">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">name_buffer</property>
                 <property name="placeholder-text" translatable="yes">Enter your name</property>
               </object>
               <packing>
@@ -67,6 +123,7 @@
                 <property name="can-focus">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">surname_buffer</property>
                 <property name="placeholder-text" translatable="yes">Enter your surname</property>
               </object>
               <packing>
@@ -87,7 +144,7 @@
               </object>
               <packing>
                 <property name="left-attach">1</property>
-                <property name="top-attach">15</property>
+                <property name="top-attach">17</property>
               </packing>
             </child>
             <child>
@@ -272,6 +329,7 @@
                 <property name="can-focus">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">email_buffer</property>
                 <property name="placeholder-text" translatable="yes">Enter your email</property>
               </object>
               <packing>
@@ -286,6 +344,7 @@
                 <property name="can-focus">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">password_buffer</property>
                 <property name="placeholder-text" translatable="yes">Enter your password</property>
               </object>
               <packing>
@@ -300,6 +359,7 @@
                 <property name="can-focus">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">country_buffer</property>
                 <property name="placeholder-text" translatable="yes">Enter your country</property>
               </object>
               <packing>
@@ -314,6 +374,7 @@
                 <property name="can-focus">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">city_buffer</property>
                 <property name="placeholder-text" translatable="yes">Enter your city</property>
               </object>
               <packing>
@@ -328,6 +389,7 @@
                 <property name="can-focus">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">address_buffer</property>
                 <property name="placeholder-text" translatable="yes">Enter your address</property>
               </object>
               <packing>
@@ -342,6 +404,7 @@
                 <property name="can-focus">True</property>
                 <property name="margin-right">5</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">zipcode_buffer</property>
                 <property name="placeholder-text" translatable="yes">Enter your zipcode</property>
               </object>
               <packing>
@@ -353,7 +416,6 @@
               <object class="GtkLabel" id="signup_error_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">One of the field is empty!</property>
                 <attributes>
                   <attribute name="font-desc" value="Quicksand Medium, Bold 12"/>
                   <attribute name="foreground" value="#eded33333b3b"/>
@@ -361,7 +423,49 @@
               </object>
               <packing>
                 <property name="left-attach">0</property>
+                <property name="top-attach">17</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkSeparator">
+                <property name="height-request">2</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="valign">center</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
                 <property name="top-attach">15</property>
+                <property name="width">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Phone:</property>
+                <attributes>
+                  <attribute name="font-desc" value="Quicksand Medium, Medium 14"/>
+                </attributes>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">16</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="zipcode_entry1">
+                <property name="width-request">100</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="margin-right">5</property>
+                <property name="margin-end">5</property>
+                <property name="buffer">phone_buffer</property>
+                <property name="placeholder-text" translatable="yes">Enter your phone number</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">16</property>
               </packing>
             </child>
           </object>
@@ -369,7 +473,7 @@
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="padding">10</property>
-            <property name="position">0</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>

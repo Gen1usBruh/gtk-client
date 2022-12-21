@@ -42,6 +42,8 @@ GtkWidget *submit_booking_button;
 GtkBuilder *login_builder;
 GtkBuilder *signup_builder;
 
+GtkBuilder *open_builder = NULL;
+
 GtkWidget *booking1, *booking2;
 GtkWidget *transaction1, *transaction2;
 GtkWidget *status1, *status2;
@@ -116,17 +118,6 @@ char user_phone[16];
 char user_city[32];
 char user_address[64];
 char user_zipcode[32];
-
-///////////////////////
-
-GtkEntryBuffer* buffer;
-GtkEntryBuffer* buffer;
-GtkEntryBuffer* buffer;
-GtkEntryBuffer* buffer;
-GtkEntryBuffer* buffer;
-GtkEntryBuffer* buffer;
-GtkEntryBuffer* buffer;
-GtkEntryBuffer* buffer;
 
 ///////////////////////
 
@@ -245,12 +236,16 @@ main_window_auth_user(void)
 {
 	if(user_is_authenticated)
   	{
-  		gtk_button_set_label(button_user_page, user_name);
+  		gtk_button_set_label(button_user_page, "Profile");
   		gtk_widget_show(button_user_page);
   		gtk_widget_show(button_logout);
   	}
   	gtk_widget_hide(button_user_page);
   	gtk_widget_hide(button_logout);
+  	
+  	if(open_builder != NULL){
+		g_object_unref(open_builder);  	
+  	}
   	
   	gtk_widget_hide(open_window);
   	gtk_widget_show(main_window);
@@ -307,10 +302,10 @@ book_room_func(void)
 	/////////////////////
 	
 	gtk_builder_connect_signals(builder, NULL);
+	g_object_unref(builder);
 	gtk_widget_hide(open_window);
 	gtk_widget_show(book_main_window);
 	open_window = book_main_window;
-	g_object_unref(builder);
 }
 
 void
@@ -410,35 +405,31 @@ login_user_func(void)
 	
 	user_login_window = GTK_WIDGET(gtk_builder_get_object(login_builder, "login_user_window"));
 	label_login_error = GTK_WIDGET(gtk_builder_get_object(login_builder, "login_error_label"));
-	login_grid = GTK_WIDGET(gtk_builder_get_object(login_builder, "login_grid"));
-	
 	
 	gtk_builder_connect_signals(login_builder, NULL);
 	gtk_widget_hide(main_window);
 	gtk_widget_show(user_login_window);
 	open_window = user_login_window;
+	open_builder = login_builder;
 }
 
 G_MODULE_EXPORT void
 auth_login_page_func(GtkWidget* widget, gpointer data)
-{
-	//////////////////////////
-	///Send POST request to authenticate user by email and password
-	//////////////////////////
-	
-	char email_buf[64];
-	char passw_buf[64];
-	
-	strcpy(email_buf, gtk_entry_buffer_get_text(gtk_builder_get_object(login_builder, "entrybuffer1")));
-	strcpy(passw_buf, gtk_entry_buffer_get_text(gtk_builder_get_object(login_builder, "entrybuffer2")));
+{	
+	strcpy(user_email, gtk_entry_buffer_get_text(gtk_builder_get_object(login_builder, "entrybuffer1")));
+	strcpy(user_password, gtk_entry_buffer_get_text(gtk_builder_get_object(login_builder, "entrybuffer2")));
 	
 	gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "entrybuffer1"), 0, -1);
 	gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "entrybuffer2"), 0, -1);
 		
 	/*		
-	printf("\n|%s|\n", email_buf);
-	printf("\n|%s|\n", passw_buf);
+	printf("\n|%s|\n", user_email);
+	printf("\n|%s|\n", user_password);
 	*/
+	
+	//////////////////////////
+	///Send POST request to authenticate user by email and password
+	//////////////////////////
 	
 	if(ret_code == 200)
 	{
@@ -472,9 +463,6 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "entrybuffer1"), 0, -1);
 		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "entrybuffer2"), 0, -1);
 	}
-	
-	memset(email_buf, 0, sizeof(email_buf));
-	memset(email_buf, 0, sizeof(email_buf));
 }
 
 G_MODULE_EXPORT void
@@ -482,39 +470,35 @@ signup_page_func(GtkWidget* widget, gpointer data)
 {
 	g_object_unref(login_builder);
 	signup_builder = new_builder_from_file("signup_window.glade");
+	open_builder = signup_builder;
 	
 	user_signup_window = GTK_WIDGET(gtk_builder_get_object(signup_builder, "signup_user_window"));
 	label_signup_error = GTK_WIDGET(gtk_builder_get_object(signup_builder, "signup_error_label"));
-	signup_grid = GTK_WIDGET(gtk_builder_get_object(signup_builder, "signup_grid"));
 	
 	gtk_builder_connect_signals(signup_builder, NULL);
 	gtk_widget_hide(open_window);
 	gtk_widget_show(user_signup_window);
 	open_window = user_signup_window;
-	g_object_unref(signup_builder);
 }
 
 G_MODULE_EXPORT void
 auth_signup_page_func(GtkWidget* widget, gpointer data)
 {
+	strcpy(user_name, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "name_buffer"))));
+	strcpy(user_surname, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "surname_buffer"))));
+	strcpy(user_email, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "email_buffer"))));
+	strcpy(user_password, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "password_buffer"))));
+	strcpy(user_phone, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "phone_buffer"))));
+	strcpy(user_country, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "country_buffer"))));
+	strcpy(user_city, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "city_buffer"))));
+	strcpy(user_address, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "address_buffer"))));
+	strcpy(user_zipcode, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "zipcode_buffer"))));
 
-	GtkBuilder *builder = new_builder_from_file("signup_window.glade");
-	
-	
+	//////////////////////////
+	///Send POST /addUser to create new user
+	//////////////////////////
 
-	strncpy(user_name, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "name_entry"))), 63);
-	strncpy(user_surname, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "surname_entry"))), 63);
-	strncpy(user_email, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "email_entry"))), 63);
-	strncpy(user_password, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "password_entry"))), 63);
-	strncpy(user_phone, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "phone_entry"))), 15);
-	strncpy(user_country, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "country_entry"))), 31);
-	strncpy(user_city, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "city_entry"))), 31);
-	strncpy(user_address, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "address_entry"))), 63);
-	strncpy(user_zipcode, gtk_entry_get_text(GTK_WIDGET(gtk_builder_get_object(builder, "zipcode_entry"))), 31);
-	
-	
-	
-	if(1)
+	if(ret_code == 200)
 	{	
 		user_is_authenticated = 1;
 		main_window_auth_user();
@@ -522,11 +506,20 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 	else
 	{
 		gtk_label_set_label(label_signup_error, "Registration error\nTry again");
-		for(int i = 0; i <= 14; i+=2)
-			gtk_entry_set_text(gtk_grid_get_child_at(signup_grid, 1, i), "");
+		
+		// Maybe we do not need to delete all fields
+		/*
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "name_buffer"), 0, -1);
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "surname_buffer"), 0, -1);
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "email_buffer"), 0, -1);
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "password_buffer"), 0, -1);
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "phone_buffer"), 0, -1);
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "country_buffer"), 0, -1);
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "city_buffer"), 0, -1);
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "address_buffer"), 0, -1);
+		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "zipcode_buffer"), 0, -1);
+		*/
 	}
-	
-	g_object_unref(builder);
 }
 
 G_MODULE_EXPORT void
