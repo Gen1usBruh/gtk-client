@@ -122,7 +122,7 @@ int http_get(struct http *dst, char *route, char *get_body,
 }
 
 
-int http_post(struct http *dst, char *route, char *post_body, unsigned int post_body_size, char **dst_response, unsigned int *dst_response_size)
+int http_post(struct http *dst, char *route, char *post_body, unsigned int post_body_size, char **response_body, unsigned int *response_body_size)
 {
     int fd = user_socket_connect(dst->hostname, dst->port);
     char buffer[BUF_SIZE];
@@ -153,7 +153,70 @@ int http_post(struct http *dst, char *route, char *post_body, unsigned int post_
     }
     
 
-    ret_code = _http_response(fd, dst_response, dst_response_size);
+    ret_code = _http_response(fd, response_body, response_body_size);
+    
+    return ret_code;
+}
+
+int http_delete(struct http *dst, char *route, char **response_body, unsigned int *response_body_size)
+{
+    int fd = user_socket_connect(dst->hostname, dst->port);
+    char buffer[BUF_SIZE];
+    int pos = 0;
+    int bytes;
+    int ret_code;
+
+    if(fd == -1)
+    {
+        fprintf(stderr, "Socket falure\n");
+    }
+
+    bzero(buffer, BUF_SIZE);
+    pos += snprintf(buffer + pos, BUF_SIZE, "DELETE %s HTTP/1.0\r\n", route);
+    pos += snprintf(buffer + pos, BUF_SIZE - pos, "\r\n");
+    
+    bytes = write(fd, buffer, pos);
+    if(bytes != pos)
+    {
+        fprintf(stderr, "Write func failure");
+    }
+    
+    ret_code = _http_response(fd, response_body, response_body_size);
+}
+
+int http_put(struct http *dst, char *route, char *put_body, \
+            unsigned int put_body_size, char **response_body, unsigned int *response_body_size)
+{
+    int fd = user_socket_connect(dst->hostname, dst->port);
+    char buffer[BUF_SIZE];
+    int pos = 0;
+    int bytes;
+    int ret_code;
+
+    if(fd == -1)
+    {
+        fprintf(stderr, "Socket falure\n");
+    }
+
+    bzero(buffer, BUF_SIZE);
+    pos += snprintf(buffer + pos, BUF_SIZE, "PUT %s HTTP/1.0\r\n", route);
+    pos += snprintf(buffer + pos, BUF_SIZE - pos, "Content-Type: application/json\r\n");
+    pos += snprintf(buffer + pos, BUF_SIZE - pos, "Content-Length: %d\r\n", put_body_size-1);
+    pos += snprintf(buffer + pos, BUF_SIZE - pos, "\r\n");
+    // printf("POST HEADER\n%s\n", buffer);
+    bytes = write(fd, buffer, pos);
+    if(bytes != pos)
+    {
+        fprintf(stderr, "Write func failure");
+    }
+    bytes = write(fd, put_body, put_body_size);
+    if(bytes != put_body_size)
+    {
+        fprintf(stderr, "Write func failure");
+    }
+    
+
+    ret_code = _http_response(fd, response_body, response_body_size);
     
     return ret_code;
 }
