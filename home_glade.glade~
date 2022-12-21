@@ -81,7 +81,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
-                            <signal name="clicked" handler="user_orders_func" swapped="no"/>
+                            <signal name="clicked" handler="user_check_redirect" swapped="no"/>
                           </object>
                           <packing>
                             <property name="left-attach">1</property>

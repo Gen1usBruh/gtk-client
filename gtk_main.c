@@ -3,6 +3,9 @@
 #include <math.h>
 #include <string.h>
 
+#include "http/http-api.h"
+
+
 char* conc_str_int(const char *str, int num, char *buff)
 {
 	memset(buff, 0, sizeof(buff));
@@ -127,6 +130,10 @@ char user_zipcode[32];
 
 ///////////////////////
 
+struct http serv;
+
+///////////////////////
+
 int getDays(int year, int month, int day);
 int isLeap(int num);
 int daysBetweenDates(struct date date1, struct date date2);
@@ -184,6 +191,8 @@ remove_room(GtkWidget* widget, gpointer data);
 
 int main(int argc, char** argv)
 {
+	http_init(&serv, argv[1], atoi(argv[2]));
+	
 	GtkBuilder *builder;
 	
 	gtk_init(&argc, &argv);
@@ -456,36 +465,75 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 	printf("\n|%s|\n", user_password);
 	*/
 	
-	//////////////////////////
-	///Send POST request to authenticate user by email and password
-	//////////////////////////
+	///////////////////////
+	///Send GET /userByEmailAndPassword
+	///////////////////////
 	
-	if(0)//(ret_code == 200)
+	char *body_prepare = "\
+	{\"email\":\"%s\", \	
+	\"password\":\"%s\"}";	
+	
+	char post_body[1024];
+	sprintf(post_body, body_prepare, user_email, user_password);
+	
+	printf("|%s|\n",post_body);
+	
+	char *response_body = NULL;
+    	int response_body_size = 0;
+	
+    	int ret_code = http_get(&serv, "/api/user/byPasswordAndEmail", post_body, sizeof(post_body), &response_body, &response_body_size);
+    	printf("\n|%d|\n", response_body_size);
+    	printf("|%s|", response_body);
+	
+	if(ret_code == 200)
 	{
 		user_is_authenticated = 1;
 		
+		strncpy(user_name, json_name, 63);
+		strncpy(user_surname, json_surname, 63);
+		strncpy(user_email, json_email, 63);
+		strncpy(user_password, json_password, 63);
+		strncpy(user_phone, json_phone, 15);
+		strncpy(user_country, json_country, 31);
+		strncpy(user_city, json_city, 31);
+		strncpy(user_address, json_address, 63);
+		strncpy(user_zipcode, json_zipcode, 31);
+		
+		main_window_auth_user();
+		
+		/*
 		//Make GET requests until succeeds
-		while(1)//(ret_code != 200)
+		while(ret_code != 200)
 		{			
-			///////////////////////
-			///Send GET /userByEmailAndPassword
-			///////////////////////
 			
-			/*
-			strncpy(user_name, json_name, 63);
-			strncpy(user_surname, json_surname, 63);
-			strncpy(user_email, json_email, 63);
-			strncpy(user_password, json_password, 63);
-			strncpy(user_phone, json_phone, 15);
-			strncpy(user_country, json_country, 31);
-			strncpy(user_city, json_city, 31);
-			strncpy(user_address, json_address, 63);
-			strncpy(user_zipcode, json_zipcode, 31);	
-			*/
+			body_prepare = "\
+			{\"name\":\"%s\",\
+			\"surname\":\"%s\",\	
+			\"phone\":%s,\
+			\"email\":\"%s\",\	
+			\"password\":\"%s\",\
+			\"country\":\"%s\",\
+			\"city\":\"%s\",\	
+			\"address\":\"%s\",\	
+			\"zipcode\":\"%s\" }";
+
+			memset(post_body, 0, sizeof(post_body));
+			sprintf(post_body, body_prepare, user_name, user_surname, user_phone, user_email, \ 				user_password, user_country, user_city, user_address, user_zipcode);
+			
+			printf("|%s|\n",post_body);
+			
+			char *response_body = NULL;
+		    	int response_body_size = 0;
+
+		    	int ret_code = http_post(&serv, "/api/user/add", post_body, sizeof(post_body), &response_body, &response_body_size);
+		    	printf("\n|%d|\n", response_body_size);
+		    	printf("|%s|", response_body);
+			
+			
 		
 			main_window_auth_user();	
 		}
-		
+		*/
 	}
 	else
 	{
@@ -526,11 +574,35 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 	strcpy(user_zipcode, gtk_entry_buffer_get_text(GTK_WIDGET(gtk_builder_get_object(signup_builder, "zipcode_buffer"))));
 
 	//////////////////////////
-	///Send POST /addUser to create new user
+	///Send POST /api/user/add to create new user
 	//////////////////////////
 	
+	char *body_prepare = "\
+	{\"name\":\"%s\",\
+	\"surname\":\"%s\",\	
+	\"phone\":%s,\
+	\"email\":\"%s\",\	
+	\"password\":\"%s\",\
+	\"country\":\"%s\",\
+	\"city\":\"%s\",\	
+	\"address\":\"%s\",\	
+	\"zipcode\":\"%s\" }";	
 	
-	if(1)//(ret_code == 200)
+	char post_body[1024];
+	sprintf(post_body, body_prepare, user_name, user_surname, user_phone, user_email, user_password, user_country, \
+	user_city, user_address, user_zipcode);
+	
+	printf("|%s|\n",post_body);
+	
+	char *response_body = NULL;
+    	int response_body_size = 0;
+
+    	int ret_code = http_post(&serv, "/api/user/add", post_body, sizeof(post_body), &response_body, &response_body_size);
+    	printf("\n|%d|\n", response_body_size);
+    	printf("|%s|", response_body);
+	
+	
+	if(ret_code == 200)
 	{	
 		user_is_authenticated = 1;
 		main_window_auth_user();
@@ -571,8 +643,9 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 	
 	//rooms_count_response -> how many rooms were actually retreived
 	
-	if(ret_code == 200){
-		json_object * jobj = json_tokener_parse(string);
+	if(1)//(ret_code == 200)
+	{
+		//json_object * jobj = json_tokener_parse(string);
 	}
 	else
 	{

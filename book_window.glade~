@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
-  <object class="GtkTextBuffer" id="room-details_buffer1">
+  <object class="GtkTextBuffer" id="room-details_buffer">
     <property name="text" translatable="yes">Custom Sferra sheets
 Everyday Coconut bath amenities by Alaffia
 40 &amp; 50” TVs with cable
@@ -363,7 +363,7 @@ on the calendars</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="editable">False</property>
-                                                    <property name="buffer">room-details_buffer1</property>
+                                                    <property name="buffer">room-details_buffer</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -388,8 +388,8 @@ on the calendars</property>
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
                                             <property name="halign">start</property>
-                                            <property name="label" translatable="yes">Plenty of space with a king bed 
-and a desk for accomplishing all your royal business.</property>
+                                            <property name="label" translatable="yes">Plenty of space with a king bed and a desk 
+for accomplishing all your royal business.</property>
                                             <property name="yalign">0.25</property>
                                           </object>
                                           <packing>
@@ -561,7 +561,7 @@ and a desk for accomplishing all your royal business.</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="editable">False</property>
-                                                    <property name="buffer">room-details_buffer1</property>
+                                                    <property name="buffer">room-details_buffer</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -759,7 +759,7 @@ and a desk for accomplishing all your royal business.</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="editable">False</property>
-                                                    <property name="buffer">room-details_buffer1</property>
+                                                    <property name="buffer">room-details_buffer</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -957,7 +957,7 @@ and a desk for accomplishing all your royal business.</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="editable">False</property>
-                                                    <property name="buffer">room-details_buffer1</property>
+                                                    <property name="buffer">room-details_buffer</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1155,7 +1155,7 @@ and a desk for accomplishing all your royal business.</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="editable">False</property>
-                                                    <property name="buffer">room-details_buffer1</property>
+                                                    <property name="buffer">room-details_buffer</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1353,7 +1353,7 @@ and a desk for accomplishing all your royal business.</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="editable">False</property>
-                                                    <property name="buffer">room-details_buffer1</property>
+                                                    <property name="buffer">room-details_buffer</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1550,7 +1550,7 @@ and a desk for accomplishing all your royal business.</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="editable">False</property>
-                                                    <property name="buffer">room-details_buffer1</property>
+                                                    <property name="buffer">room-details_buffer</property>
                                                   </object>
                                                 </child>
                                               </object>
@@ -1748,7 +1748,7 @@ and a desk for accomplishing all your royal business.</property>
                                                     <property name="visible">True</property>
                                                     <property name="can-focus">True</property>
                                                     <property name="editable">False</property>
-                                                    <property name="buffer">room-details_buffer1</property>
+                                                    <property name="buffer">room-details_buffer</property>
                                                   </object>
                                                 </child>
                                               </object>

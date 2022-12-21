@@ -5,8 +5,8 @@ DEPDIR ?= dep
 PROJ_DIR=$(shell pwd)
 
 
-CFLAGS += $(shell pkg-config --cflags json-c)
-LDFLAGS += $(shell pkg-config --libs json-c)
+#CFLAGS += $(shell pkg-config --cflags json-c)
+#LDFLAGS += $(shell pkg-config --libs json-c)
 
 
 CFLAGS += $(shell pkg-config --cflags gtk+-3.0)
