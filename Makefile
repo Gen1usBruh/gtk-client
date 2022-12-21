@@ -5,8 +5,8 @@ DEPDIR ?= dep
 PROJ_DIR=$(shell pwd)
 
 
-#CFLAGS += $(shell pkg-config --cflags json-c)
-#LDFLAGS += $(shell pkg-config --libs json-c)
+CFLAGS += $(shell pkg-config --cflags json-c)
+LDFLAGS += $(shell pkg-config --libs json-c)
 
 
 CFLAGS += $(shell pkg-config --cflags gtk+-3.0)
@@ -31,7 +31,7 @@ CLIENT_OBJS := $(addprefix $(BUILDDIR)/, $(CLIENT_OBJS))
 DEPS := $(($(SERVER_SRCS) $(CLIENT_SRCS)):.c=.d)
 DEPS := $(addprefix $(DEPDIR)/, $(DEPS))
 
-# CFLAGS += -I$(JSON_C_DIR)/include/json-c
+#CFLAGS += -I$(JSON_C_DIR)/include/json-c
 # Or to use lines like: #include <json-c/json_object.h>
 
 

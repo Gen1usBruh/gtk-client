@@ -4,6 +4,7 @@
 #include <string.h>
 
 #include "http/http-api.h"
+#include <json-c/json.h>
 
 
 char* conc_str_int(const char *str, int num, char *buff)
@@ -255,12 +256,13 @@ main_window_auth_user(void)
 	if(user_is_authenticated)
   	{
   		gtk_button_set_label(button_user_page, "Profile");
-  		gtk_widget_show(button_user_page);
   		gtk_widget_show(button_logout);
   	}
-	gtk_button_set_label(button_user_page, "Log in");
-  	gtk_widget_hide(button_user_page);
-  	gtk_widget_hide(button_logout);
+  	else
+  	{
+  		gtk_button_set_label(button_user_page, "Log in");
+	  	gtk_widget_hide(button_logout);
+  	}
   	
 	// smells fishy. Check later!!!
   	if(open_builder != NULL){
@@ -459,81 +461,42 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 
 
 	
-		
-	/*		
-	printf("\n|%s|\n", user_email);
-	printf("\n|%s|\n", user_password);
-	*/
 	
 	///////////////////////
-	///Send GET /userByEmailAndPassword
+	///Send GET /api/user/byPasswordAndEmail
 	///////////////////////
 	
 	char *body_prepare = "\
 	{\"email\":\"%s\", \	
 	\"password\":\"%s\"}";	
 	
-	char post_body[1024];
-	sprintf(post_body, body_prepare, user_email, user_password);
-	
-	printf("|%s|\n",post_body);
+	char get_body[1024];
+	sprintf(get_body, body_prepare, user_email, user_password);
 	
 	char *response_body = NULL;
     	int response_body_size = 0;
 	
-    	int ret_code = http_get(&serv, "/api/user/byPasswordAndEmail", post_body, sizeof(post_body), &response_body, &response_body_size);
-    	printf("\n|%d|\n", response_body_size);
-    	printf("|%s|", response_body);
+    	int ret_code = http_get(&serv, "/api/user/byPasswordAndEmail", get_body, sizeof(get_body), &response_body, &response_body_size);
 	
-	if(ret_code == 200)
+	if(ret_code == 200 && *response_body)
 	{
 		user_is_authenticated = 1;
 		
-		strncpy(user_name, json_name, 63);
-		strncpy(user_surname, json_surname, 63);
-		strncpy(user_email, json_email, 63);
-		strncpy(user_password, json_password, 63);
-		strncpy(user_phone, json_phone, 15);
-		strncpy(user_country, json_country, 31);
-		strncpy(user_city, json_city, 31);
-		strncpy(user_address, json_address, 63);
-		strncpy(user_zipcode, json_zipcode, 31);
+		json_object * jobj = json_tokener_parse(response_body);
 		
+		strncpy(user_name, json_object_get_string(json_object_object_get(jobj, "name")), 63);
+		strncpy(user_surname, json_object_get_string(json_object_object_get(jobj, "surname")), 63);
+		strncpy(user_email, json_object_get_string(json_object_object_get(jobj, "email")), 63);
+		strncpy(user_password, json_object_get_string(json_object_object_get(jobj, "password")), 63);
+		strncpy(user_phone, json_object_get_string(json_object_object_get(jobj, "phone")), 15);
+		strncpy(user_country, json_object_get_string(json_object_object_get(jobj, "country")), 31);
+		strncpy(user_city, json_object_get_string(json_object_object_get(jobj, "city")), 31);
+		strncpy(user_address, json_object_get_string(json_object_object_get(jobj, "address")), 63);
+		strncpy(user_zipcode, json_object_get_string(json_object_object_get(jobj, "zipcode")), 31);
+		
+		json_object_put(jobj);
+
 		main_window_auth_user();
-		
-		/*
-		//Make GET requests until succeeds
-		while(ret_code != 200)
-		{			
-			
-			body_prepare = "\
-			{\"name\":\"%s\",\
-			\"surname\":\"%s\",\	
-			\"phone\":%s,\
-			\"email\":\"%s\",\	
-			\"password\":\"%s\",\
-			\"country\":\"%s\",\
-			\"city\":\"%s\",\	
-			\"address\":\"%s\",\	
-			\"zipcode\":\"%s\" }";
-
-			memset(post_body, 0, sizeof(post_body));
-			sprintf(post_body, body_prepare, user_name, user_surname, user_phone, user_email, \ 				user_password, user_country, user_city, user_address, user_zipcode);
-			
-			printf("|%s|\n",post_body);
-			
-			char *response_body = NULL;
-		    	int response_body_size = 0;
-
-		    	int ret_code = http_post(&serv, "/api/user/add", post_body, sizeof(post_body), &response_body, &response_body_size);
-		    	printf("\n|%d|\n", response_body_size);
-		    	printf("|%s|", response_body);
-			
-			
-		
-			main_window_auth_user();	
-		}
-		*/
 	}
 	else
 	{
@@ -542,7 +505,7 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "entrybuffer1"), 0, -1);
 		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "entrybuffer2"), 0, -1);
 	}
-}
+}		
 
 G_MODULE_EXPORT void
 signup_page_func(GtkWidget* widget, gpointer data)
@@ -592,14 +555,10 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 	sprintf(post_body, body_prepare, user_name, user_surname, user_phone, user_email, user_password, user_country, \
 	user_city, user_address, user_zipcode);
 	
-	printf("|%s|\n",post_body);
-	
 	char *response_body = NULL;
     	int response_body_size = 0;
 
     	int ret_code = http_post(&serv, "/api/user/add", post_body, sizeof(post_body), &response_body, &response_body_size);
-    	printf("\n|%d|\n", response_body_size);
-    	printf("|%s|", response_body);
 	
 	
 	if(ret_code == 200)
@@ -610,19 +569,6 @@ auth_signup_page_func(GtkWidget* widget, gpointer data)
 	else
 	{
 		gtk_label_set_label(label_signup_error, "Registration error\nTry again");
-		
-		// Maybe we do not need to delete all fields
-		/*
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "name_buffer"), 0, -1);
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "surname_buffer"), 0, -1);
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "email_buffer"), 0, -1);
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "password_buffer"), 0, -1);
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "phone_buffer"), 0, -1);
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "country_buffer"), 0, -1);
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "city_buffer"), 0, -1);
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "address_buffer"), 0, -1);
-		gtk_entry_buffer_delete_text(gtk_builder_get_object(login_builder, "zipcode_buffer"), 0, -1);
-		*/
 	}
 	
 }
