@@ -2,6 +2,12 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkEntryBuffer" id="entrybuffer1">
+    <property name="max-length">63</property>
+  </object>
+  <object class="GtkEntryBuffer" id="entrybuffer2">
+    <property name="max-length">63</property>
+  </object>
   <object class="GtkApplicationWindow" id="login_user_window">
     <property name="can-focus">False</property>
     <property name="window-position">center</property>
@@ -29,7 +35,9 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">entrybuffer1</property>
                 <property name="placeholder-text" translatable="yes">Enter your email</property>
+                <signal name="changed" handler="entry_login_email" swapped="no"/>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -70,7 +78,11 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="margin-end">5</property>
+                <property name="buffer">entrybuffer2</property>
+                <property name="visibility">False</property>
+                <property name="invisible-char">*</property>
                 <property name="placeholder-text" translatable="yes">Enter your password</property>
+                <signal name="changed" handler="entry_login_password" swapped="no"/>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -94,7 +106,7 @@
               <object class="GtkLabel" id="login_error_label">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">One of the field is empty!</property>
+                <property name="label" translatable="yes">One of the fields is empty!</property>
                 <attributes>
                   <attribute name="font-desc" value="Quicksand Medium, Bold 12"/>
                   <attribute name="foreground" value="#eded33333b3b"/>
