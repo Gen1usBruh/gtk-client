@@ -80,7 +80,8 @@ static int _http_response(int fd, char **dst_body, unsigned int *buf_size)
     return ret_code;
 }
 
-int http_get(struct http *dst, char *route, char **dst_response, unsigned int *dst_response_size)
+int http_get(struct http *dst, char *route, char *get_body, 
+            unsigned int get_body_size, char **response_body, unsigned int *response_body_size)
 {
     int fd = user_socket_connect(dst->hostname, dst->port);
     char buffer[BUF_SIZE];
@@ -95,19 +96,29 @@ int http_get(struct http *dst, char *route, char **dst_response, unsigned int *d
 
     bzero(buffer, BUF_SIZE);
     pos += snprintf(buffer + pos, BUF_SIZE, "GET %s HTTP/1.0\r\n", route);
-    pos += snprintf(buffer + pos, BUF_SIZE - pos, "\r\n");
+    if(get_body != NULL)
+    {
+        pos += snprintf(buffer + pos, BUF_SIZE - pos, "Content-Type: application/json\r\n");
+        pos += snprintf(buffer + pos, BUF_SIZE - pos, "Content-Length: %d\r\n", get_body_size-1);
+    }
+        pos += snprintf(buffer + pos, BUF_SIZE - pos, "\r\n");
     
     bytes = write(fd, buffer, pos);
     if(bytes != pos)
     {
         fprintf(stderr, "Write func failure");
     }
-    // bzero(dst_body, buf_size);
-    // printf("REQUEST\n%s\n", buffer);
+    if(get_body != NULL)
+    {
+        bytes = write(fd, get_body, get_body_size);
+        if(bytes != get_body_size)
+        {
+            fprintf(stderr, "Write func failure");
+        }
+    }
+    
 
-    ret_code = _http_response(fd, dst_response, dst_response_size);
-
-    return ret_code;
+    ret_code = _http_response(fd, response_body, response_body_size);
 }
 
 
