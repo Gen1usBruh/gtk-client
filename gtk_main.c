@@ -540,6 +540,7 @@ G_MODULE_EXPORT void
 admin_table_modify(GtkWidget* widget, gpointer data)
 {
 	char table_buf[64];
+	printf("ADMIN_TABLE_MODIFY: |%s|\n", table_buf);
 	strncpy(table_buf, data, 63);
 	open_admin_table_window_func();
 	
