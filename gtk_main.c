@@ -54,8 +54,8 @@ GtkWidget *label_date_to_search;
 GtkWidget *total_cost;
 GtkWidget *submit_booking_button;
 
-GtkWidget *admin_table_error
-GtkWidget *admin_user_error
+GtkWidget *admin_table_error;
+GtkWidget *admin_user_error;
 
 GtkBuilder *login_builder;
 GtkBuilder *signup_builder;
@@ -207,6 +207,9 @@ admin_profile_func(void);
 
 void
 open_admin_table_window_func(void);
+
+G_MODULE_EXPORT void
+admin_table_modify(GtkWidget* widget, gpointer data);
 
 G_MODULE_EXPORT void
 admin_record_add(GtkWidget* widget, gpointer data);
@@ -553,9 +556,9 @@ admin_table_modify(GtkWidget* widget, gpointer data)
 	
 	printf("\nREQUEST PATH: |%s|\n", req_addr);
 	
-    	int ret_code = http_get(&serv, req_addr, post_body, sizeof(post_body), &response_body, &response_body_size);
+    	int ret_code = http_get(&serv, req_addr, NULL, NULL, &response_body, &response_body_size);
 	
-	if(ret_code == 200 && *response_body)
+	if(ret_code == 200 && *response_body) // Maybe change to size == 1 ??
 	{	
 		json_object *jobj = json_tokener_parse(response_body);
 		
@@ -564,9 +567,9 @@ admin_table_modify(GtkWidget* widget, gpointer data)
 		json_object *jobj_child;
 		for(int i = 0; i < objects_count_json; ++i)
 		{
-			GtkWidget *grid_ = gtk_grid_new();
-			GtkWidget *label_num = gtk_label_new();
-			GtkWidget *label_id = gtk_label_new();
+			GtkWidget *grid = gtk_grid_new();
+			GtkWidget *label_num = gtk_label_new("");
+			GtkWidget *label_id = gtk_label_new("");
 			GtkWidget *button_modify = gtk_button_new();
 			GtkWidget *button_delete = gtk_button_new();
 			
@@ -574,7 +577,7 @@ admin_table_modify(GtkWidget* widget, gpointer data)
 			
 			char index_buf[4];
 			sprintf(index_buf, "%d", i);
-			gtk_label_set_text(label_num, id_buf);
+			gtk_label_set_text(label_num, index_buf);
 			gtk_label_set_text(label_id, json_object_get_string(json_object_object_get(jobj_child, "id")));
 			gtk_grid_attach(grid, label_num, 0, 0, 1, 1);
 			gtk_grid_attach(grid, label_id, 1, 0, 1, 1);
@@ -588,11 +591,11 @@ admin_table_modify(GtkWidget* widget, gpointer data)
 
 			char delete_buf[64];
 			char delete_id_buf[64];
-			
-			strcpy(update_buf, concat(req_addr, json_object_get_string(json_object_object_get(jobj_child, "/id")));
+			// Maybe problem with concat
+			strcpy(update_buf, concat(req_addr, json_object_get_string(json_object_object_get(jobj_child, "/id"))));
 			
 			strcpy(delete_buf, concat(req_addr, "/delete/"));
-			strcpy(delete_id_buf, concat(delete_buf, json_object_get_string(json_object_object_get(jobj_child, "id")));
+			strcpy(delete_id_buf, concat(delete_buf, json_object_get_string(json_object_object_get(jobj_child, "id"))));
 	
 			g_signal_connect(button_modify, "clicked", G_CALLBACK(admin_button_modify), update_buf);
 			g_signal_connect(button_delete, "clicked", G_CALLBACK(admin_button_delete), delete_id_buf);		
@@ -619,11 +622,11 @@ admin_button_modify(GtkWidget* widget, gpointer data)
 	GtkWidget *box_general = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "box_general"));
 	admin_user_error = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "admin_user_error"));
 
-	char *body_prepare = ""	
+	char *body_prepare = "";	
 	char *response_body = NULL;
-    	int response_body_size = 0;
-	
-    	int ret_code = http_get(&serv, data, get_body, sizeof(get_body), &response_body, &response_body_size);
+	int response_body_size = 0;
+
+	int ret_code = http_get(&serv, data, NULL, NULL, &response_body, &response_body_size);
 	
 	if(ret_code == 200 && *response_body)
 	{
@@ -634,35 +637,38 @@ admin_button_modify(GtkWidget* widget, gpointer data)
 		{
 			GtkWidget *grid = gtk_grid_new();
 			GtkWidget *entry = gtk_entry_new();
-			GtkWidget *label = gtk_label_new();
-			gtk_grid_attach(grid, label_num, 0, 0, 1, 1);
-			gtk_grid_attach(grid, label_id, 1, 0, 1, 1);
+			GtkWidget *label = gtk_label_new("");
+			gtk_grid_attach(grid, label, 0, 0, 1, 1);
+			gtk_grid_attach(grid, entry, 1, 0, 1, 1);
 			gtk_grid_set_row_homogeneous(grid, FALSE);
 			gtk_grid_set_column_homogeneous(grid, TRUE);
 			gtk_grid_set_column_spacing(grid, 50);
 			gtk_label_set_text(label, key);
-			gtk_entry_set_text(entry, json_object_get_string(json_object_object_get(jobj_child, key));
+			gtk_entry_set_text(entry, json_object_get_string(json_object_object_get(jobj, key)));
 			
+			GtkWidget *combo;
 			switch(type) {
 				case json_type_boolean: 
 				case json_type_double: 
 				case json_type_int: 
 				case json_type_string:
-					gtk_box_pack_end(box_general, grid, FALSE, TRUE, 0);
+					
 					
 					break;
 				case json_type_object:
-					GtkWidget *combo = gtk_combo_box_text_new();
+					combo = gtk_combo_box_text_new();
 					gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), "never", "Not visible");
 					gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), "when-active", "Visible when active");
 					gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), "always", "Always visible");
 					gtk_grid_attach(grid, combo, 1, 0, 1, 1);
-					gtk_box_pack_end(box_general, grid, FALSE, TRUE, 0);
 					
 					//jobj = json_object_object_get(jobj, key);
  
 					break;
 			}
+			gtk_box_pack_end(box_general, grid, FALSE, TRUE, 0);
+
+
     		}	
 	}
 	else
@@ -671,48 +677,50 @@ admin_button_modify(GtkWidget* widget, gpointer data)
 	}
 		
 		
-		
+	
+	// UPDATE DATA ON BUTTON SAVE CLICK
 
-	char *body_prepare = "\
-	{\"email\":\"%s\", \	
-	\"password\":\"%s\"}";	
+	// char *body_prepare = "\
+	// {\"email\":\"%s\", \	
+	// \"password\":\"%s\"}";	
 	
-				strcpy(update_buf, concat(req_addr, "/update/"));
-			strcpy(update_id_buf, concat(update_buf, json_object_get_string(json_object_object_get(jobj_child, "id")));
+	// strcpy(update_buf, concat(req_addr, "/update/"));
+	// strcpy(update_id_buf, concat(update_buf, json_object_get_string(json_object_object_get(jobj_child, "id")));
 	
-	char get_body[1024];
-	sprintf(get_body, body_prepare, user_email, user_password);
+	// char get_body[1024];
+	// sprintf(get_body, body_prepare, user_email, user_password);
 	
-	char *response_body = NULL;
-    	int response_body_size = 0;
+	// char *response_body = NULL;
+	// int response_body_size = 0;
+
+	// int ret_code = http_put(&serv, data, get_body, sizeof(get_body), &response_body, &response_body_size);
 	
-    	int ret_code = http_put(&serv, data, get_body, sizeof(get_body), &response_body, &response_body_size);
-	
-	if(ret_code == 200 && *response_body)
-	{
-		user_is_authenticated = 1;
+	// if(ret_code == 200 && *response_body)
+	// {
+	// 	user_is_authenticated = 1;
 		
-		json_object * jobj = json_tokener_parse(response_body);
+	// 	json_object * jobj = json_tokener_parse(response_body);
+	// }
 }
 
 G_MODULE_EXPORT void
 admin_button_delete(GtkWidget* widget, gpointer data)
 {
-	char *body_prepare = "";
 	
 	char *response_body = NULL;
-    	int response_body_size = 0;
-	
-    	int ret_code = http_delete(&serv, data, body_prepare, 0, &response_body, &response_body_size);
+	int response_body_size = 0;
+
+	int ret_code = http_delete(&serv, data, &response_body, &response_body_size);
 	
 	if(ret_code == 200 && *response_body)
 	{	
-		
+		// REDIRECT TO CURRENT PAGE ONE MORE TIME
 	}
 	else
 	{
 		gtk_label_set_text(admin_table_error, "Table record deletion error!");
 	}
+}
 
 void
 login_user_func(void)
@@ -918,11 +926,11 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 		for(int i = 1; i <= rooms_count_json; ++i)
 		{
 			gtk_label_set_text(rooms_display[i-1].description, json_object_get_string(json_object_object_get(jobj, "description")));
-			image;
-			book_button;
-			room_type;
-			description
-			price;
+			// image;
+			// book_button;
+			// room_type;
+			// description
+			// price;
 		}
 		
 		json_object_put(jobj);
