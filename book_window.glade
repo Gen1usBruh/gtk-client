@@ -228,7 +228,7 @@ on the calendars</property>
                 <property name="column-homogeneous">True</property>
                 <child>
                   <object class="GtkButton">
-                    <property name="label" translatable="yes">Sort by number of beds</property>
+                    <property name="label" translatable="yes">Sort by price</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
@@ -2655,6 +2655,7 @@ Before 12:00 pm</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
+                        <signal name="clicked" handler="continue_booking" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">True</property>

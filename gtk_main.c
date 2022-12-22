@@ -247,6 +247,9 @@ booking_get_func(GtkWidget* widget, gpointer data);
 G_MODULE_EXPORT void
 user_get_func(GtkWidget* widget, gpointer data);
 
+G_MODULE_EXPORT void
+continue_booking(GtkWidget* widget, gpointer data);
+
 ///////////////////////
 
 
@@ -261,7 +264,6 @@ int main(int argc, char** argv)
 	if((builder = new_builder_from_file("home_glade.glade")) == NULL)
 		return 1;
 		
-	fprintf(stderr, "FAT COCK");
 	main_window = GTK_WIDGET(gtk_builder_get_object(builder, "main_window"));
 	open_window = main_window;
   	
@@ -963,7 +965,7 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 						// printf("|%s|\n",gtk_label_get_text(rooms_display[counter].room_type));
 						// printf("|%s|\n",gtk_label_get_text(rooms_display[counter].description));
 						char buffer[64];
-						sprintf(buffer, "/screens/images/photo%d.jpg", counter + 1);
+						sprintf(buffer, "screens/images/photo%d.jpg", counter + 1);
 						gtk_image_set_from_file(rooms_display[counter].image, buffer);
 
 						gtk_widget_show(rooms_display[counter].grid_parent);	
@@ -978,10 +980,10 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 			// ret_code = http_get(&serv, "/api/room_booked", NULL, NULL, &response_body, &response_body_size);
 		}
 		// fprintf(stderr, "JALABISTON");
-		sprintf(buff_count, "%d", counter + 1);
+		sprintf(buff_count, "%d", counter);
 		gtk_label_set_text(label_room_count, buff_count); 
 
-		rooms_count_response = counter + 1;
+		rooms_count_response = counter;
 	}
 	else
 	{
@@ -1031,6 +1033,23 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 	}
 	*/
 }
+
+// G_MODULE_EXPORT void
+// continue_booking(GtkWidget* widget, gpointer data)
+// {
+// 	GtkWidget *dialog;
+
+// 	dialog = gtk_message_dialog_new (GTK_WINDOW (open_window),
+// 							GTK_DIALOG_MODAL,
+// 							GTK_MESSAGE_INFO,
+// 							GTK_BUTTONS_OK_CANCEL,
+// 							"Confirm your booking.\n"\
+// 							"Only cash on arrival is accepted.");
+// 	gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+// 									"Press one of the keys");
+// 	gtk_dialog_run (GTK_DIALOG (dialog));
+// 	gtk_widget_destroy (dialog);
+// }
 
 G_MODULE_EXPORT void
 sort_rooms_bed_count(GtkWidget* widget, gpointer data)
