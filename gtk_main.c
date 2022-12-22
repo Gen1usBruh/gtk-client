@@ -14,6 +14,15 @@ char* conc_str_int(const char *str, int num, char *buff)
 	return buff;
 }
 
+char* concat(const char *s1, const char *s2)
+{
+    char result[64]; // +1 for the null-terminator
+    // in real code you would check for errors in malloc here
+    strcpy(result, s1);
+    strcat(result, s2);
+    return result;
+}
+
 const char* map_num_to_month[12] = {
 	"January", "February", "March", "April",
 	"May", "June", "July", "August", "September", 
@@ -25,6 +34,8 @@ GtkWindow *book_main_window = NULL;
 GtkWindow *user_login_window = NULL;
 GtkWindow *user_signup_window = NULL;
 GtkWindow *user_orders_window = NULL;
+GtkWindow *admin_login_window = NULL;
+GtkWindow *admin_table_window = NULL;
 
 GtkWindow *open_window = NULL;
 
@@ -43,8 +54,12 @@ GtkWidget *label_date_to_search;
 GtkWidget *total_cost;
 GtkWidget *submit_booking_button;
 
+GtkWidget *admin_table_error
+GtkWidget *admin_user_error
+
 GtkBuilder *login_builder;
 GtkBuilder *signup_builder;
+GtkBuilder *admin_table_builder;
 
 GtkBuilder *open_builder = NULL;
 
@@ -80,7 +95,6 @@ struct booking_rooms_frame booking_basket[2];
 
 struct room_listbox_data{
 	char room_type[8];
-	char details[256];
 	char description[2][30];
 	double price;
 };
@@ -91,7 +105,6 @@ struct room_listbox{
 	GtkWidget *image;
 	GtkWidget *book_button;
 	GtkWidget *room_type;
-	GtkWidget *details;
 	GtkWidget *description;
 	GtkWidget *price;
 };
@@ -188,6 +201,43 @@ add_room_to_booking(GtkWidget* widget, gpointer data);
 
 G_MODULE_EXPORT void
 remove_room(GtkWidget* widget, gpointer data);
+
+void
+admin_profile_func(void);
+
+void
+open_admin_table_window_func(void);
+
+G_MODULE_EXPORT void
+admin_record_add(GtkWidget* widget, gpointer data);
+
+G_MODULE_EXPORT void
+admin_button_modify(GtkWidget* widget, gpointer data);
+
+G_MODULE_EXPORT void
+admin_button_delete(GtkWidget* widget, gpointer data);
+
+///////////////////////
+
+G_MODULE_EXPORT void
+roomtype_get_func(GtkWidget* widget, gpointer data);
+
+G_MODULE_EXPORT void
+roombooked_get_func(GtkWidget* widget, gpointer data);
+
+G_MODULE_EXPORT void
+room_get_func(GtkWidget* widget, gpointer data);
+
+G_MODULE_EXPORT void
+transaction_get_func(GtkWidget* widget, gpointer data);
+
+G_MODULE_EXPORT void
+booking_get_func(GtkWidget* widget, gpointer data);
+
+G_MODULE_EXPORT void
+user_get_func(GtkWidget* widget, gpointer data);
+
+///////////////////////
 
 
 int main(int argc, char** argv)
@@ -293,7 +343,6 @@ book_room_func(void)
 		rooms_display[i-1].image = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("image_room", i, buf)));
 		rooms_display[i-1].book_button = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("add_room_button", i, buf)));
 		rooms_display[i-1].room_type = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("room_type_label", i, buf)));
-		rooms_display[i-1].details = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("textview_details", i, buf)));
 		rooms_display[i-1].description = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("short_description_label", i, buf)));
 		rooms_display[i-1].price = GTK_WIDGET(gtk_builder_get_object(builder, conc_str_int("price_label", i, buf)));
 		//printf("PRICE for ROOM %s: %f", i-1, gtk_label_get_text(rooms_display[i-1]->price));
@@ -430,6 +479,242 @@ logout_func(GtkWidget* widget, gpointer data)
 }
 
 void
+admin_profile_func(void)
+{
+	GtkBuilder *builder = new_builder_from_file("admin_main_window.glade");
+	admin_login_window = GTK_WIDGET(gtk_builder_get_object(builder, "admin_main_window"));
+	
+	GtkWidget *button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_roomtype"));
+	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "roomType");
+	
+	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_roombooked"));
+	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "room_booked");
+	
+	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_room"));
+	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "room");
+	
+	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_transaction"));
+	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "transaction");
+	
+	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_booking"));
+	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "booking");
+	
+	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_user"));
+	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "user");
+	
+	gtk_builder_connect_signals(builder, NULL);
+	gtk_widget_hide(open_window);
+	gtk_widget_show(admin_login_window);
+	open_window = admin_login_window;
+	
+	g_object_unref(builder);
+}
+
+void
+open_admin_table_window_func(void)
+{
+	admin_table_builder = new_builder_from_file("admin_table1_window.glade");
+	
+	admin_table_window = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "admin_table_main_window"));
+	
+	
+	
+	gtk_builder_connect_signals(admin_table_builder, NULL);
+	gtk_widget_hide(open_window);
+	gtk_widget_show(admin_table_window);
+	open_window = admin_table_window;
+	
+	g_object_unref(admin_table_builder);
+}
+
+void
+admin_button_modify();
+
+void
+admin_button_delete();
+
+G_MODULE_EXPORT void
+admin_table_modify(GtkWidget* widget, gpointer data)
+{
+	char table_buf[64];
+	strncpy(table_buf, data, 63);
+	open_admin_table_window_func();
+	
+	GtkWidget *box_table = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "box_table"));
+	admin_table_error = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "admin_table_error"));
+	gtk_label_set_text(admin_table_error, "");
+	
+	char *body_prepare = "";
+	char post_body[1024];
+	char *response_body = NULL;
+    	int response_body_size = 0;
+    	char req_addr[64];
+	strcpy(req_addr, concat("/api/", table_buf));
+	
+	printf("\nREQUEST PATH: |%s|\n", req_addr);
+	
+    	int ret_code = http_get(&serv, req_addr, post_body, sizeof(post_body), &response_body, &response_body_size);
+	
+	if(ret_code == 200 && *response_body)
+	{	
+		json_object *jobj = json_tokener_parse(response_body);
+		
+		int objects_count_json = json_object_object_length(jobj);
+		
+		json_object *jobj_child;
+		for(int i = 0; i < objects_count_json; ++i)
+		{
+			GtkWidget *grid_ = gtk_grid_new();
+			GtkWidget *label_num = gtk_label_new();
+			GtkWidget *label_id = gtk_label_new();
+			GtkWidget *button_modify = gtk_button_new();
+			GtkWidget *button_delete = gtk_button_new();
+			
+			jobj_child = json_object_array_get_idx(jobj, i);
+			
+			char index_buf[4];
+			sprintf(index_buf, "%d", i);
+			gtk_label_set_text(label_num, id_buf);
+			gtk_label_set_text(label_id, json_object_get_string(json_object_object_get(jobj_child, "id")));
+			gtk_grid_attach(grid, label_num, 0, 0, 1, 1);
+			gtk_grid_attach(grid, label_id, 1, 0, 1, 1);
+			gtk_grid_attach(grid, button_modify, 2, 0, 1, 1);
+			gtk_grid_attach(grid, button_delete, 3, 0, 1, 1);
+			gtk_grid_set_row_homogeneous(grid, TRUE);
+			gtk_grid_set_column_homogeneous(grid, FALSE);
+			gtk_box_pack_end(box_table, grid, FALSE, TRUE, 0);
+			
+			char update_buf[64];
+
+			char delete_buf[64];
+			char delete_id_buf[64];
+			
+			strcpy(update_buf, concat(req_addr, json_object_get_string(json_object_object_get(jobj_child, "/id")));
+			
+			strcpy(delete_buf, concat(req_addr, "/delete/"));
+			strcpy(delete_id_buf, concat(delete_buf, json_object_get_string(json_object_object_get(jobj_child, "id")));
+	
+			g_signal_connect(button_modify, "clicked", G_CALLBACK(admin_button_modify), update_buf);
+			g_signal_connect(button_delete, "clicked", G_CALLBACK(admin_button_delete), delete_id_buf);		
+		}
+		
+	}
+	else
+	{
+		gtk_label_set_text(admin_table_error, "Table records fetching error!");
+	}
+	
+}
+
+G_MODULE_EXPORT void
+admin_record_add(GtkWidget* widget, gpointer data)
+{
+
+}
+
+G_MODULE_EXPORT void
+admin_button_modify(GtkWidget* widget, gpointer data)
+{
+	GtkBuilder *admin_user_builder = new_builder_from_file("admin_user_window.glade");
+	GtkWidget *box_general = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "box_general"));
+	admin_user_error = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "admin_user_error"));
+
+	char *body_prepare = ""	
+	char *response_body = NULL;
+    	int response_body_size = 0;
+	
+    	int ret_code = http_get(&serv, data, get_body, sizeof(get_body), &response_body, &response_body_size);
+	
+	if(ret_code == 200 && *response_body)
+	{
+		json_object * jobj = json_tokener_parse(response_body);
+		enum json_type type;
+		
+		json_object_object_foreach(jobj, key, val)
+		{
+			GtkWidget *grid = gtk_grid_new();
+			GtkWidget *entry = gtk_entry_new();
+			GtkWidget *label = gtk_label_new();
+			gtk_grid_attach(grid, label_num, 0, 0, 1, 1);
+			gtk_grid_attach(grid, label_id, 1, 0, 1, 1);
+			gtk_grid_set_row_homogeneous(grid, FALSE);
+			gtk_grid_set_column_homogeneous(grid, TRUE);
+			gtk_grid_set_column_spacing(grid, 50);
+			gtk_label_set_text(label, key);
+			gtk_entry_set_text(entry, json_object_get_string(json_object_object_get(jobj_child, key));
+			
+			switch(type) {
+				case json_type_boolean: 
+				case json_type_double: 
+				case json_type_int: 
+				case json_type_string:
+					gtk_box_pack_end(box_general, grid, FALSE, TRUE, 0);
+					
+					break;
+				case json_type_object:
+					GtkWidget *combo = gtk_combo_box_text_new();
+					gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), "never", "Not visible");
+					gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), "when-active", "Visible when active");
+					gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(combo), "always", "Always visible");
+					gtk_grid_attach(grid, combo, 1, 0, 1, 1);
+					gtk_box_pack_end(box_general, grid, FALSE, TRUE, 0);
+					
+					//jobj = json_object_object_get(jobj, key);
+ 
+					break;
+			}
+    		}	
+	}
+	else
+	{
+		gtk_label_set_text(admin_table_error, "Record fetching error!");
+	}
+		
+		
+		
+
+	char *body_prepare = "\
+	{\"email\":\"%s\", \	
+	\"password\":\"%s\"}";	
+	
+				strcpy(update_buf, concat(req_addr, "/update/"));
+			strcpy(update_id_buf, concat(update_buf, json_object_get_string(json_object_object_get(jobj_child, "id")));
+	
+	char get_body[1024];
+	sprintf(get_body, body_prepare, user_email, user_password);
+	
+	char *response_body = NULL;
+    	int response_body_size = 0;
+	
+    	int ret_code = http_put(&serv, data, get_body, sizeof(get_body), &response_body, &response_body_size);
+	
+	if(ret_code == 200 && *response_body)
+	{
+		user_is_authenticated = 1;
+		
+		json_object * jobj = json_tokener_parse(response_body);
+}
+
+G_MODULE_EXPORT void
+admin_button_delete(GtkWidget* widget, gpointer data)
+{
+	char *body_prepare = "";
+	
+	char *response_body = NULL;
+    	int response_body_size = 0;
+	
+    	int ret_code = http_delete(&serv, data, body_prepare, 0, &response_body, &response_body_size);
+	
+	if(ret_code == 200 && *response_body)
+	{	
+		
+	}
+	else
+	{
+		gtk_label_set_text(admin_table_error, "Table record deletion error!");
+	}
+
+void
 login_user_func(void)
 {
 	login_builder = new_builder_from_file("login_window.glade");
@@ -456,7 +741,7 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 	// Validate for admin credentials
 	if(strcmp(admin_email, user_email) == 0 && strcmp(admin_password, user_password) == 0)
 	{
-		
+		admin_profile_func();
 	}
 
 
@@ -584,14 +869,63 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 	aux_cal_date_to.day = cal_date_to.day;
 		
 	///////////////////////////////
-	///Make GET request with date interval
+	///Make GET /api/room_booked/getRoomByDate
 	//////////////////////////////
 	
-	//rooms_count_response -> how many rooms were actually retreived
+	//////////////////////////////////////////
+	struct room_listbox_data{
+	char room_type[8];
+	char description[2][30];
+	double price;
+	};
+	struct room_listbox_data rooms_data[8];
+
+	struct room_listbox{
+		GtkWidget *grid_parent;
+		GtkWidget *image;
+		GtkWidget *book_button;
+		GtkWidget *room_type;
+		GtkWidget *description;
+		GtkWidget *price;
+	};
+	struct room_listbox rooms_display[8];
+	//////////////////////////////////////////
 	
-	if(1)//(ret_code == 200)
-	{
-		//json_object * jobj = json_tokener_parse(string);
+	char *body_prepare = "\
+	{\"dateFrom\":\"%s\", \	
+	\"dateTo\":\"%s\"}";
+	
+	char buf_date_from[16];
+	char buf_date_to[16];
+	
+	sprintf(buf_date_from, "%d-%02d-%02d", aux_cal_date_from.year, aux_cal_date_from.month, aux_cal_date_from.day);
+	sprintf(buf_date_to, "%d-%02d-%02d", aux_cal_date_to.year, aux_cal_date_to.month, aux_cal_date_to.day);
+	
+	char post_body[1024];
+	sprintf(post_body, body_prepare, buf_date_from, buf_date_to);
+	
+	char *response_body = NULL;
+    	int response_body_size = 0;
+	
+    	int ret_code = http_post(&serv, "/api/room_booked/getRoomByDate", post_body, sizeof(post_body), &response_body, &response_body_size);
+	
+	if(ret_code == 200 && *response_body)
+	{	
+		json_object * jobj = json_tokener_parse(response_body);
+		
+		int rooms_count_json = json_object_object_length(jobj);
+		
+		for(int i = 1; i <= rooms_count_json; ++i)
+		{
+			gtk_label_set_text(rooms_display[i-1].description, json_object_get_string(json_object_object_get(jobj, "description")));
+			image;
+			book_button;
+			room_type;
+			description
+			price;
+		}
+		
+		json_object_put(jobj);
 	}
 	else
 	{
