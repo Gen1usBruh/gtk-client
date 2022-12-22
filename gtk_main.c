@@ -360,6 +360,8 @@ book_room_func(void)
 		//printf("PRICE for ROOM %s: %f", i-1, gtk_label_get_text(rooms_display[i-1]->price));
 		gtk_widget_hide(rooms_display[i-1].grid_parent);
 	}
+
+	// fprintf(stderr, "PIDORAS SUKA\n%s\n", gtk_label_get_text(rooms_display[0].room_type));
 	
 	for(int i = 1; i <= 2; ++i)
 	{
@@ -921,7 +923,7 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 		response_body_size = 0;
 		ret_code = http_get(&serv, "/api/room_booked", NULL, NULL, &response_body, &response_body_size);
 		
-		while (ret_code == 200 && *response_body)
+		if (ret_code == 200 && *response_body)
 		{
 			json_object * jobj_booked = json_tokener_parse(response_body);
 			
@@ -930,27 +932,36 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 			int rooms_length = json_object_array_length(jobj_rooms);
 			json_object *val1;
 			json_object *val2;
+			json_object *val1_room;
 			int i, j;
-			for(i = 0; i < booked_length; i++)
+			counter = 0;
+			fprintf(stderr, "%d BOOKED %d ROOMS", booked_length, rooms_length);
+			for(j = 0; j < rooms_length; j++)
 			{
-				val1 = json_object_array_get_idx(jobj_booked, i);
-				for(j = 0; j < rooms_length; j++)
+				val2 = json_object_array_get_idx(jobj_rooms, j);
+				for(i = 0; i < booked_length; i++)
 				{
-					val2 = json_object_array_get_idx(jobj_rooms, i);
-
-					printf("-------------------------------\n");
-					printf("%s\n", json_object_to_json_string_ext(val1, JSON_C_TO_STRING_PRETTY));
-					printf("-------------------------------\n");
-					printf("%s\n", json_object_to_json_string_ext(val2, JSON_C_TO_STRING_PRETTY));
-					printf("-------------------------------\n");
-
-					if(json_object_get_int(json_object_object_get(val1, "id")) != json_object_get_int(json_object_object_get(val2, "room_id")))
+					val1 = json_object_array_get_idx(jobj_booked, i);
+					val1_room = json_object_object_get(val1, "room");
+					// printf("-------------------------------\n");
+					// printf("%s\n", json_object_to_json_string_ext(val1_room, JSON_C_TO_STRING_PRETTY));
+					// printf("-------------------------------\n");
+					// printf("%s\n", json_object_to_json_string_ext(val2, JSON_C_TO_STRING_PRETTY));
+					// printf("-------------------------------\n");
+					
+					if( counter < 8 && json_object_get_int(json_object_object_get(val1_room, "id")) != json_object_get_int(json_object_object_get(val2, "room_id")))
 					{
-						gtk_label_set_text(rooms_display[counter].room_type, json_object_get_string(json_object_object_get(json_object_object_get(json_object_object_get(val1, "room"), "room_type"), "name")));
-						gtk_label_set_text(rooms_display[counter].description, json_object_get_string(json_object_object_get(json_object_object_get(val1, "room"), "description")));
+						// fprintf(stderr, "I AM STARTING IF\n");
+						// fprintf(stderr, "%d COUNTER\n", counter);
+						// fprintf(stderr, "%s", gtk_label_get_text(rooms_display[0].room_type));	
+						// fprintf(stderr, "%s", gtk_label_get_text(rooms_display[counter].room_type));	
+						// fprintf(stderr, "I AM INSIDE IF\n");
+						gtk_label_set_text(GTK_LABEL(rooms_display[counter].room_type), json_object_get_string(json_object_object_get(\
+																			json_object_object_get(val1_room, "room_type"), "name")));
+						gtk_label_set_text(GTK_LABEL(rooms_display[counter].description), json_object_get_string(json_object_object_get(val1_room, "description")));
 						gtk_label_set_text(rooms_display[counter].price, "$350.0");
-						printf("|%s|\n",gtk_label_get_text(rooms_display[counter].room_type));
-						printf("|%s|\n",gtk_label_get_text(rooms_display[counter].description));
+						// printf("|%s|\n",gtk_label_get_text(rooms_display[counter].room_type));
+						// printf("|%s|\n",gtk_label_get_text(rooms_display[counter].description));
 						char buffer[64];
 						sprintf(buffer, "/screens/images/photo%d.jpg", counter + 1);
 						gtk_image_set_from_file(rooms_display[counter].image, buffer);
@@ -964,7 +975,7 @@ search_rooms_func(GtkWidget* widget, gpointer data)
 			}
 			response_body_size = 0;
 			
-			ret_code = http_get(&serv, "/api/room_booked", NULL, NULL, &response_body, &response_body_size);
+			// ret_code = http_get(&serv, "/api/room_booked", NULL, NULL, &response_body, &response_body_size);
 		}
 		// fprintf(stderr, "JALABISTON");
 		sprintf(buff_count, "%d", counter + 1);
