@@ -416,6 +416,7 @@ get_calendar_to_date(GtkWidget* widget, gpointer data)
 G_MODULE_EXPORT void
 user_check_redirect(GtkWidget* widget, gpointer data)
 {
+	printf("SUKA BLYAAT: |%d|\n", user_is_authenticated);
 	if(user_is_authenticated)
 		user_orders_func();
 	else
@@ -436,6 +437,7 @@ user_orders_func(void)
 	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "phone_entry")), user_phone);
 	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "country_entry")), user_country);
 	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "city_entry")), user_city);
+	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "address_entry")), user_address);
 	gtk_entry_set_text(GTK_WIDGET(gtk_builder_get_object(builder, "zipcode_entry")), user_zipcode);
 	
 	booking1 = GTK_WIDGET(gtk_builder_get_object(builder, "booking1"));
@@ -484,31 +486,34 @@ logout_func(GtkWidget* widget, gpointer data)
 void
 admin_profile_func(void)
 {
+	puts("ADMIN ABOABABABABA");
 	GtkBuilder *builder = new_builder_from_file("admin_main_window.glade");
-	admin_login_window = GTK_WIDGET(gtk_builder_get_object(builder, "admin_main_window"));
+	GtkWindow *admin_login_window_ = GTK_WIDGET(gtk_builder_get_object(builder, "admin_root_window"));
 	
-	GtkWidget *button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_roomtype"));
-	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "roomType");
+	GtkWidget *button1 = GTK_WIDGET(gtk_builder_get_object(builder, "button_roomtype"));
+	g_signal_connect(button1, "clicked", G_CALLBACK(admin_table_modify), "roomType");
 	
-	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_roombooked"));
-	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "room_booked");
+	GtkWidget *button2 = GTK_WIDGET(gtk_builder_get_object(builder, "button_roombooked"));
+	g_signal_connect(button2, "clicked", G_CALLBACK(admin_table_modify), "room_booked");
 	
-	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_room"));
-	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "room");
+	GtkWidget *button3 = GTK_WIDGET(gtk_builder_get_object(builder, "button_room"));
+	g_signal_connect(button3, "clicked", G_CALLBACK(admin_table_modify), "room");
 	
-	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_transaction"));
-	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "transaction");
+	GtkWidget *button4 = GTK_WIDGET(gtk_builder_get_object(builder, "button_transaction"));
+	g_signal_connect(button4, "clicked", G_CALLBACK(admin_table_modify), "transaction");
 	
-	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_booking"));
-	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "booking");
+	GtkWidget *button5 = GTK_WIDGET(gtk_builder_get_object(builder, "button_booking"));
+	g_signal_connect(button5, "clicked", G_CALLBACK(admin_table_modify), "booking");
 	
-	button = GTK_WIDGET(gtk_builder_get_object(admin_table_builder, "button_user"));
-	g_signal_connect(button, "clicked", G_CALLBACK(admin_table_modify), "user");
+	GtkWidget *button6 = GTK_WIDGET(gtk_builder_get_object(builder, "button_user"));
+	g_signal_connect(button6, "clicked", G_CALLBACK(admin_table_modify), "user");
+
+	puts("ADMIN OBABABABABABA");
 	
 	gtk_builder_connect_signals(builder, NULL);
 	gtk_widget_hide(open_window);
-	gtk_widget_show(admin_login_window);
-	open_window = admin_login_window;
+	//gtk_widget_show(admin_login_window_);
+	//open_window = admin_login_window_;
 	
 	g_object_unref(builder);
 }
@@ -726,11 +731,14 @@ admin_button_delete(GtkWidget* widget, gpointer data)
 void
 login_user_func(void)
 {
+	puts("LOGIN USER FUNC");
 	login_builder = new_builder_from_file("login_window.glade");
 	
 	user_login_window = GTK_WIDGET(gtk_builder_get_object(login_builder, "login_user_window"));
 	label_login_error = GTK_WIDGET(gtk_builder_get_object(login_builder, "login_error_label"));
 	
+	puts("LOGIN USER FUNC");
+
 	gtk_builder_connect_signals(login_builder, NULL);
 	gtk_widget_hide(main_window);
 	gtk_widget_show(user_login_window);
@@ -741,6 +749,7 @@ login_user_func(void)
 G_MODULE_EXPORT void
 auth_login_page_func(GtkWidget* widget, gpointer data)
 {	
+	puts("AUTH LOGIN PAGE FUNC");
 	strcpy(user_email, gtk_entry_buffer_get_text(gtk_builder_get_object(login_builder, "entrybuffer1")));
 	strcpy(user_password, gtk_entry_buffer_get_text(gtk_builder_get_object(login_builder, "entrybuffer2")));
 	
@@ -750,6 +759,7 @@ auth_login_page_func(GtkWidget* widget, gpointer data)
 	// Validate for admin credentials
 	if(strcmp(admin_email, user_email) == 0 && strcmp(admin_password, user_password) == 0)
 	{
+		puts("Bruhhhhhhhhhhhhhhhhhhhhh\n");
 		admin_profile_func();
 	}
 

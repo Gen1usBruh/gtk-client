@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkWindow" id="admin_main_window">
+  <object class="GtkWindow" id="admin_root_window">
     <property name="width-request">700</property>
     <property name="can-focus">False</property>
     <child>
