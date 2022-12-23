@@ -255,6 +255,13 @@ continue_booking(GtkWidget* widget, gpointer data);
 
 int main(int argc, char** argv)
 {
+
+	if(argc < 3)
+	{
+		fprintf(stderr, "Usage: %s hostname port\n", argv[0]);
+		return 1;
+	}
+
 	http_init(&serv, argv[1], atoi(argv[2]));
 	
 	GtkBuilder *builder;
